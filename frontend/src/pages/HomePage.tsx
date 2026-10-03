@@ -1,4 +1,5 @@
 import { useState, type SubmitEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import CategoryCard from "../components/CategoryCard";
 import '../styles/HomePage.scss';
 
@@ -6,6 +7,7 @@ const TIMES = ["8 AM", "9 AM", "10 AM", "11 AM", "12 AM", "1 PM","2 PM", "3 PM",
 
 
 export default function HomePage() {
+  const navigate = useNavigate();
   // tutaj bedzie sie aktualizowalo z wpisywaniem i powinnismy moc to wyslac
   // do backendu -> pls look into jak serio to bedzie dzialac oki?
   const [location, setLocation] = useState("");
@@ -14,8 +16,8 @@ export default function HomePage() {
 
   function onSubmit(e: SubmitEvent) {
     e.preventDefault();
-    console.log(
-      "This will call the api and navigate us to the map with the props",
+    navigate(
+      `/map?location=${encodeURIComponent(location)}&time=${encodeURIComponent(time)}`,
     );
   }
 
