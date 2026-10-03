@@ -1,23 +1,71 @@
 import type { Nanny } from '../types';
 import Icon from './Icon';
+import '../styles/NannyCard.scss';
 
 export default function NannyCard({ nanny }: { nanny: Nanny }) {
+  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
   return (
     <article className="nanny-card">
-      <div className="nanny-top">
-        <div className="avatar photo-placeholder">photo</div>
-        <span className="verified-badge"><Icon name="verified" size={16} filled />Verified Profile</span>
+      <div className="nanny-photo-container">
+        <img src={nanny.photoUrl || "/default-avatar.jpg"} alt={nanny.name} />
+        <div className="photo-overlay"></div>
+        
+        <div className="nanny-header-text">
+          <span className="nanny-name">{nanny.name} ({nanny.age})</span>
+        </div>
+        
+        {nanny.isOnline && (
+          <div className="online-badge tone-green">
+            Now online
+          </div>
+        )}
       </div>
-      <h3 className="nanny-name">{nanny.name}</h3>
-      <p className="nanny-desc">{nanny.description}</p>
-      <div className="nanny-metrics">
-        <span className="rating"><Icon name="star" size={18} filled className="star" /><strong>{nanny.rating}</strong></span>
-        <span className="muted"><strong className="ink">${nanny.hourlyRate}</strong>/hr</span>
+      
+      <div className="nanny-info">
+        <div className="nanny-primary-details">
+          <p className="hourly-rate">{nanny.hourlyRate}</p>
+          <p className="experience">{nanny.experience}</p>
+        </div>
+
+        {nanny.reviewsCount > 0 && (
+          <div className="nanny-ratings">
+            <div className="stars">
+              {[...Array(5)].map((_, i) => (
+                <Icon 
+                  key={i} 
+                  name="star" 
+                  size={14} 
+                  filled={i < Math.floor(nanny.rating)} 
+                  className="star-icon"
+                />
+              ))}
+            </div>
+            <span className="reviews-text">{nanny.reviewsCount} opinions</span>
+          </div>
+        )}
+
+        <div className="nanny-availability">
+          <p className="availability-label">Availability:</p>
+          <div className="availability-grid">
+            {daysOfWeek.map((day, index) => {
+              const isAvailable = nanny.availability[index];
+              return (
+                <div 
+                  key={day} 
+                  className={`day-box ${isAvailable ? 'available' : 'unavailable'}`}
+                >
+                  <span className="day-name">{day}</span>
+                  <Icon 
+                    name={isAvailable ? 'check' : 'cross'} 
+                    size={10} 
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
-      <div className="availability">
-        {nanny.availableNow ? 'AVAILABLE RIGHT NOW' : 'Available from ' + nanny.availableFrom}
-      </div>
-      <button className="btn btn-outline">VIEW FULL PROFILE</button>
     </article>
   );
 }
