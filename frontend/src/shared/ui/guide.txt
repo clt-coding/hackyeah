@@ -1,0 +1,67 @@
+Wspólne komponenty UI (Button, Container, Card)
+=================================================
+
+Import:
+  import { Button, Container, Card } from "../../shared/ui";
+  (ścieżka zależy od tego, jak głęboko jest twój plik w src/pages/...)
+
+--- Button ---
+  <Button size="md" variant="primary" onClick={...}>Tekst przycisku</Button>
+
+  size: "sm" | "md" | "lg" (domyślnie "md")
+  variant: "primary" | "secondary" | "outline" (domyślnie "primary")
+  tekst = to co wpiszesz między <Button> ... </Button>
+  działają też normalne propsy <button>, np. disabled, type, onClick
+
+--- Container ---
+  Owija stronę i ustawia max-width + wyśrodkowanie + padding po bokach.
+  <Container size="md">...</Container>
+
+  size: "sm" | "md" | "lg" | "full" (domyślnie "md")
+
+--- Card ---
+  Pudełko z obramowaniem, zaokrąglonymi rogami i paddingiem w środku.
+  <Card size="md">...</Card>
+
+  size: "sm" | "md" | "lg" (domyślnie "md")
+
+
+Jak zmienić wygląd globalnie (kolory, czcionka, zaokrąglenie)
+================================================================
+Wszystko jest w zmiennych CSS w src/index.css:
+
+  --color-accent      -> główny kolor (przyciski primary, akcenty)
+  --color-accent-hover
+  --color-text        -> kolor tekstu
+  --color-text-muted
+  --color-bg          -> kolor tła strony / kart (BIAŁY, zmień to żeby zmienić tło)
+  --color-bg-muted    -> tło np. przycisku secondary
+  --color-border       -> kolor obramowań (Card)
+  --radius-sm          -> zaokrąglenie rogów
+  --font-family        -> czcionka
+
+Przykład zmiany tła strony na szare:
+  w src/index.css zmień:
+    --color-bg: #ffffff;
+  na:
+    --color-bg: #f5f5f5;
+
+Zmiana działa automatycznie we wszystkich komponentach, bo wszystkie
+odwołują się do tych zmiennych (nie mają kolorów "na sztywno" w CSS).
+
+
+Jak dodać nowy wariant/rozmiar
+================================
+1. Dopisz klasę w pliku .module.css danego komponentu (np. Button.module.css),
+   np. .danger { background-color: red; }
+2. Dodaj nazwę do typu w .tsx, np.
+   type ButtonVariant = "primary" | "secondary" | "outline" | "danger";
+
+
+Jak dodać nowy wspólny komponent
+===================================
+1. Stwórz folder: src/shared/ui/NazwaKomponentu/
+2. W nim: NazwaKomponentu.tsx + NazwaKomponentu.module.css
+   (skopiuj strukturę z Button albo Card jako wzór)
+3. Dodaj eksport w src/shared/ui/index.ts:
+   export { NazwaKomponentu } from "./NazwaKomponentu/NazwaKomponentu";
