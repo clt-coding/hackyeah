@@ -1,6 +1,3 @@
-$blue: #1e7fe8;
-$blue-dark: #166ac2;
-$blue-light: #e8f2ff;
 $shadow: rgba(0, 80, 160, 0.15);
 
 * {
@@ -50,15 +47,15 @@ body {
     .input {
       padding: 12px 14px;
       margin-bottom: 16px;
-      border: 2px solid $blue-light;
+      border: 2px solid #b6a999;
       border-radius: 12px;
-      background: $blue-light;
+      background: #d1c5b4;
       font-size: 15px;
-      color: #1a1a1a;
+      color: #111010;
       transition: 0.25s;
 
       &:focus {
-        border-color: $blue;
+        border-color: #9b6e5f;
         background: rgb(254, 248, 242);
         box-shadow: 0 0 8px #111010;
         outline: none;
@@ -67,8 +64,8 @@ body {
 
     .login-btn {
       padding: 12px;
-      background: $blue;
-      color: white;
+      background: #9b6e5f;
+      color: #111010;
       border: none;
       border-radius: 12px;
       font-size: 16px;
@@ -77,14 +74,14 @@ body {
       transition: 0.25s;
 
       &:hover {
-        background: $blue-dark;
+        background: #9b6e5f;
       }
     }
 
     .register-btn {
       background: none;
       border: none;
-      color: $blue;
+      color: #4D0E13;
       font-size: 14px;
       margin-bottom: 18px;
       cursor: pointer;

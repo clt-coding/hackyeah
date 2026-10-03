@@ -1,0 +1,61 @@
+.category-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 320px;
+  border-radius: 28px;
+  padding: 32px;
+}
+
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #fdfcfb;
+  font-size: 1.3rem;
+  color: #2b2420;
+}
+
+.category-body {
+  margin-top: 48px;
+}
+
+.category-title {
+  margin: 0 0 12px;
+  font-family: Georgia, "Playfair Display", serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2b2420;
+}
+
+.category-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.category-subtitle {
+  margin: 0;
+  color: #544d45;
+  font-size: 0.95rem;
+}
+
+.category-arrow {
+  color: #2b2420;
+  font-size: 2rem;
+}
+
+.tone-pink {
+  background: #C8A49F;
+}
+
+.tone-green {
+  background: #b6a999;
+}
+
+.tone-purple {
+  background: #9b6e5f;
+}
