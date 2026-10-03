@@ -1,7 +1,8 @@
 import { useState, type SubmitEvent } from "react";
 import CategoryCard from "../components/CategoryCard";
 
-const TIMES = ["placeholder1", "placeholder2", "placeholder3"];
+const TIMES = ["8 AM", "9 AM", "10 AM", "11 AM", "12 AM", "1 PM","2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM"];
+
 
 export default function HomePage() {
   // tutaj bedzie sie aktualizowalo z wpisywaniem i powinnismy moc to wyslac
@@ -48,7 +49,15 @@ export default function HomePage() {
             aria-hidden="true"
           />
           <span className="search-field-text">
-            <span className="field-label">TIME</span>
+            <span className="field-label">FROM</span>
+            <select value={time} onChange={(e) => setTime(e.target.value)}>
+              {TIMES.map((t) => (
+                <option key={t}>{t}</option>
+              ))}
+            </select>
+          </span>
+          <span className="search-field-text">
+            <span className="field-label">UNTIL</span>
             <select value={time} onChange={(e) => setTime(e.target.value)}>
               {TIMES.map((t) => (
                 <option key={t}>{t}</option>
