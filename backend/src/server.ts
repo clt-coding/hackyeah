@@ -8,6 +8,7 @@ import { authenticateToken } from './middlewares/auth.middleware.js';
 
 import authRouter from './routes/auth.route.js';
 import userRouter from './routes/user.route.js';
+import nannyRouter from './routes/nanny.route.js';
 
 dotenv.config();
 
@@ -45,7 +46,10 @@ app.use('/api/auth', authRouter);
 
 app.use(authenticateToken);
 
+app.use('/api/nannies', nannyRouter);
+
 app.use('/api/user', userRouter);
+
 
 
 app.use((_req: Request, res: Response) => {
@@ -67,3 +71,4 @@ app.listen(PORT, () => {
   console.log(`Running on http://localhost:${PORT}`);
   console.log(`Health check endpoint available at http://localhost:${PORT}/api/health`);
 });
+
