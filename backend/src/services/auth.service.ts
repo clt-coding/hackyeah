@@ -49,20 +49,14 @@ export async function registerUser(
   return newUser;
 }
 
-export function generateJWT(email: string) {
-  const user = db.orm.public.User.first({
-    email: email,
-  });
+export function generateJWT(user: UserPayload) {
+    const payload = {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        surname: user.surname,
+        type: user.type
+    };
 
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  const payload = {
-    email: email,
-  };
-
-  const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: "1h" });
-
-  return token;
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
 }
