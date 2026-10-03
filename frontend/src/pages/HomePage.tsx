@@ -1,5 +1,6 @@
 import { useState, type SubmitEvent } from "react";
 import CategoryCard from "../components/CategoryCard";
+import '../styles/HomePage.scss';
 
 const TIMES = ["8 AM", "9 AM", "10 AM", "11 AM", "12 AM", "1 PM","2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM"];
 

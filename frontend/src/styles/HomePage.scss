@@ -1,41 +1,30 @@
-img {
-  cursor: pointer;
+.mainHomeContainer {
+  margin: 40px 50px;
 }
 
-button {
-  cursor: pointer;
+.littleText {
+  color: rgb(0, 0, 0);
+  text-align: center;
+  font-family: "Ovo", serif;
+  font-size: 1.5rem;
+  margin: 0 0 20px
 }
 
-.category-body {
-  margin-top: 48px;
+.titleText {
+  text-align: center;
+  font-family: "Ovo", serif;
+  font-size: 4rem;
+  margin: 0 0 48px;
 }
 
-.category-title {
-  margin: 0 0 12px;
-  font-family: Georgia, "Playfair Display", serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #2b2420;
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 64px;
 }
 
-.category-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
-.category-subtitle {
-  margin: 0;
-  color: #544d45;
-  font-size: 0.95rem;
-}
-
-.category-arrow {
-  color: #2b2420;
-  font-size: 1.1rem;
-} 
-
-/* 
 .search-card {
   display: flex;
   align-items: center;
@@ -109,7 +98,7 @@ button {
   font-family: "Ovo", serif;
   font-style: italic;
   color: #9a8f81;
-} */
+}
 
 .btn {
   display: inline-flex;
@@ -120,7 +109,7 @@ button {
   font-weight: 500;
   font-family: inherit;
 }
-/* 
+
 .btn-primary {
   background: #4D0E13;
   color: #fff;
@@ -138,4 +127,4 @@ button {
   margin-left: auto;
   padding: 16px 28px;
   font-size: 1rem;
-} */
+}
