@@ -1,5 +1,6 @@
 import { db } from "./../libs/db.js";
 //SPRAWDZIC CZY DZIALA!!!
+// TO UZYJ CURLA!!!!
 export interface InstitutionResult {
   name: string;
   address: string;
