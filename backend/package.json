@@ -7,7 +7,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
-    "test": "jest --ci --forceExit --detectOpenHandles --runInBand"
+    "test": "jest --ci --forceExit --detectOpenHandles --runInBand",
+    "db:sync": "npx prisma contract emit && npx prisma db update"
   },
   "keywords": [],
   "author": "",
