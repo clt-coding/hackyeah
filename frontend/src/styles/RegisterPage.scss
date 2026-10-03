@@ -1,34 +1,41 @@
-$blue: #1e7fe8;
-$blue-dark: #166ac2;
-$blue-light: #e8f2ff;
-$shadow: rgba(0, 80, 160, 0.15);
+$color-text: #1a1a1a;
+$color-text-muted: #6b6b6b;
+$color-bg: rgb(254 248 242);
+$color-bg-muted: #f3f3f3;
+$color-border: #d5c7b5;
+$color-logo: #4C0E11;
 
-* {
-  box-sizing: border-box;
-  padding: 0
-}
+$radius-sm: 6px;
 
-body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background: linear-gradient(180deg, rgb(254, 248, 242) 0%, #f3f3f3 100%);
-  font-family: "Inter", sans-serif;
+$font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+
+html, body, #root {
+  height: 100%;
+  overflow-y: auto !important;
+  font-family: $font-family;
 }
 
 .register-container {
-  height: 100dvh;
-  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  height: auto !important;
+  width: 100%;
+  background-color: $color-bg;
+  padding: 40px 20px;
+  box-sizing: border-box;
 
   .register-box {
-    width: 420px;
-    padding: 32px 32px;
-    background: white;
-    border-radius: 18px;
-    box-shadow: 0 10px 35px $shadow;
+    border: 0.5px solid $color-border;
+    width: 100%;
+    max-width: 480px;
+    background: #ffffff;
+    padding: 24px 32px 32px;
+    border-radius: $radius-sm;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -38,75 +45,92 @@ body {
       height: 120px;
       object-fit: cover;
       object-position: center;
-      transform: translateY(-6px);
-    }
-
-
-    .input,
-    .register-btn {
-      width: 100%;
-    }
-
-    .input {
-      padding: 12px 14px;
       margin-bottom: 16px;
-      border: 2px solid $blue-light;
-      border-radius: 12px;
-      background: $blue-light;
-      font-size: 15px;
-      color: #003366;
-      transition: 0.25s;
+    }
 
-      &:focus {
-        border-color: $blue;
-        background: white;
-        box-shadow: 0 0 8px rgba(30, 127, 232, 0.3);
-        outline: none;
+    .register-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .input-field {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .input {
+          font-family: $font-family;
+          width: 100%;
+          padding: 10px 14px;
+          border: 0.5px solid $color-border;
+          border-radius: $radius-sm;
+          font-size: 0.95rem;
+          box-sizing: border-box;
+          transition: border-color 0.2s, box-shadow 0.2s;
+
+          &:focus {
+            outline: none;
+            border-color: $color-text-muted;
+            box-shadow: 0 0 0 3px rgba(41, 24, 6, 0.1);
+          }
+        }
+
+        .error-text {
+          color: #ef4444;
+          font-size: 0.78rem;
+          margin: 4px 0 0 4px;
+          text-align: left;
+        }
       }
-    }
 
-    .register-btn {
-      padding: 12px;
-      background: $blue;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-bottom: 14px;
-      transition: 0.25s;
+      .address-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 8px;
 
-      &:hover {
-        background: $blue-dark;
+        .section-title {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #475569;
+          margin: 8px 0 0 0;
+          text-align: left;
+          border-bottom: 1px solid #f1f5f9;
+          padding-bottom: 6px;
+        }
       }
-    }
-  }
-}
 
-@media (max-width: 420px) {
-    #root {
-        padding: 0;
-    }
-  .register-box {
-    width: 100% !important;
-    padding: 24px 20px !important;
-    border-radius: 14px;
+      .input-row {
+        display: flex;
+        gap: 10px;
 
-    .logo {
-      width: 240px;
-      height: 85px;
-      transform: translateY(-4px);
+        .input-field {
+          flex: 1;
+        }
+      }
 
-    }
+      .register-btn {
+        margin-top: 12px;
+        padding: 12px;
+        background-color: $color-logo;
+        color: #ffffff;
+        border: none;
+        border-radius: $radius-sm;
+        font-size: 1rem;
+        font-family: $font-family;
+        cursor: pointer;
+        transition: background-color 0.2s;
 
-    .input {
-      font-size: 14px;
-      padding: 11px 12px;
-    }
+        &:hover {
+          background-color: darken($color-logo, 10%);
+        }
 
-    .register-btn {
-      font-size: 15px;
-      padding: 11px;
+        &:disabled {
+          background-color: #94a3b8;
+          cursor: not-allowed;
+        }
+      }
     }
   }
 }
