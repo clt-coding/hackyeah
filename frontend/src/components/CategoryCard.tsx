@@ -1,3 +1,5 @@
+import "../styles/CategoryCard.scss";
+
 interface CategoryCardProps {
   tone: "pink" | "green" | "purple";
   icon: string;
