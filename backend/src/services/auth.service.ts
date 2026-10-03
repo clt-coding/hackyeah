@@ -1,7 +1,12 @@
-import { db }from './../libs/db.js';
-import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
+import { db } from '../libs/db.js';
+import bcrypt from 'bcrypt';
+import jwtPkg from 'jsonwebtoken';
 import { Type } from '../types/user.js';
+import type { UserPayload } from '../types/user.js';
+
+const jwt = (jwtPkg as any).default || jwtPkg;
+
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_change_in_production';
 
 export async function loginUser(email: string, password: string) {
     const user = await db.orm.public.User.first({
@@ -43,20 +48,14 @@ export async function registerUser(email: string, password: string, name: string
     return newUser;
 }
 
-export function generateJWT(email: string) {
-    const user = db.orm.public.User.first({
-        email: email
-    });
-
-    if (!user) {
-        throw new Error('User not found');
-    }
-
+export function generateJWT(user: UserPayload) {
     const payload = {
-        email: email
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        surname: user.surname,
+        type: user.type
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '1h' });
-
-    return token;
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
 }
