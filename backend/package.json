@@ -1,25 +1,29 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "server.ts",
+  "main": "src/server.ts",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "tsx watch server.ts"
+    "dev": "tsx watch src/server.ts",
+    "test": "jest --ci --forceExit --detectOpenHandles --runInBand"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^7.10.0",
     "express": "^5.2.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.4",
     "dotenv": "^18.0.5",
+    "jest": "^30.5.2",
     "nodemon": "^3.1.14",
+    "prisma": "^8.0.0-rc.19",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }

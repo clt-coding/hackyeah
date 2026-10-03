@@ -1,0 +1,72 @@
+// Prisma generator configuration
+generator client {
+    provider = "prisma-client-js"
+}
+
+// DB connection configuration
+datasource db {
+    provider = "postgresql"
+}
+
+// Tables schema
+model User {
+    id        String   @id @default(uuid())
+    email     String   @unique
+    name      String
+    surname   String
+    type      Int
+    password_hash String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("user")
+    addresses Address[]
+    nannies Nanny[]
+}
+
+model Address {
+    id        String   @id @default(uuid())
+    userId    String
+    type      Int
+    name      String
+    country   String
+    postalCode String
+    city      String
+    street    String
+    building_number String
+    unit_number String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    user      User     @relation(fields: [userId], references: [id])
+    @@map("address")
+}
+
+model Nanny {
+    id        String   @id @default(uuid())
+    userId    String
+    phone_number String
+    rating    Float
+    rating_count Int
+    hourly_wage Float
+    availability Boolean
+
+    user      User     @relation(fields: [userId], references: [id])
+    @@map("nanny")
+}
+
+model Institution {
+    id       String   @id @default(uuid())
+    name      String
+    type      Int
+    country   String
+    postalCode String
+    city      String
+    street    String
+    building_number String
+    unit_number String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("institution")
+}

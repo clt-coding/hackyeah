@@ -11,11 +11,11 @@ const PORT = process.env.PORT || 5000;
 app.use(json());
 
 // Przykładowy punkt końcowy (Route)
-app.get("/", (req, res) => {
-  res.send("Witaj w Express.js!");
+app.get("/health", (req, res) => {
+  res.status(200).json({ message: "Healthy" });
 });
 
 // Uruchomienie serwera
 app.listen(PORT, () => {
-  console.log(`Serwer działa na http://localhost:${PORT}`);
+  console.log(`Running on http://localhost:${PORT}`);
 });
