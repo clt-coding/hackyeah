@@ -1,0 +1,23 @@
+interface CategoryCardProps {
+  tone: "pink" | "green" | "purple";
+  icon: string;
+  title: string;
+  subtitle: string;
+}
+
+export default function CategoryCard({ tone, icon, title, subtitle }: CategoryCardProps) {
+  return (
+    <div className={`category-card tone-${tone}`}>
+      <div className="category-icon">
+        <i className={`fa-solid fa-${icon}`} aria-hidden="true" />
+      </div>
+      <div className="category-body">
+        <h3 className="category-title">{title}</h3>
+        <div className="category-footer">
+          <p className="category-subtitle">{subtitle}</p>
+          <i className="fa-solid fa-arrow-up-right category-arrow" aria-hidden="true" />
+        </div>
+      </div>
+    </div>
+  );
+}
