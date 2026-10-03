@@ -1,58 +1,10 @@
-img {
-  cursor: pointer;
-}
-
-button {
-  cursor: pointer;
-}
-
-.category-body {
-  margin-top: 48px;
-}
-
-.category-title {
-  margin: 0 0 12px;
-  font-family: Georgia, "Playfair Display", serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #2b2420;
-}
-
-.category-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.category-subtitle {
-  margin: 0;
-  color: #544d45;
-  font-size: 0.95rem;
-}
-
-.category-arrow {
-  color: #2b2420;
-  font-size: 1.1rem;
-} 
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  font-family: inherit;
-}
-
-/* .MainMapPage {
+.MainMapPage {
   display: grid;
   grid-template-columns: 280px 1fr 320px;
   gap: 24px;
   margin: 40px 50px;
 }
 
-.filters,
 .details {
   background: #fff;
   border-radius: 5px;
@@ -67,8 +19,8 @@ button {
   align-items: center;
   text-align: center;
   gap: 16px;
-} */
-/* 
+}
+
 .details .filters-title {
   margin-bottom: 0;
   align-self: flex-start;
@@ -102,13 +54,21 @@ button {
 }
 
 .tag-daycare {
-  background: #e3a98c;
+  background: #C8A49F;
 }
 
 .tag-activity {
-  background: #b7a9d6;
+  background: #b6a999;
 }
 
+.type-tag {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #fff;
+}
 .muted {
   color: #9a8f81;
 }
@@ -156,8 +116,8 @@ button {
 
 .details-link:hover {
   text-decoration: underline;
-} */
-/* 
+}
+
 .filters-title {
   font-weight: 700;
   font-size: 0.8rem;
@@ -175,7 +135,7 @@ button {
 .filter-group legend {
   font-weight: 700;
   font-size: 0.95rem;
-  color: #f39160;
+  color: #9b6e5f;
   margin-bottom: 10px;
   padding: 0;
 }
@@ -195,7 +155,7 @@ button {
 
 .filter-group input[type="text"]:focus,
 .filter-group input[type="number"]:focus {
-  border-bottom-color: #f39160;
+  border-bottom-color: #C8A49F;
 }
 
 .chip-row {
@@ -226,7 +186,7 @@ button {
 }
 
 .check:has(input:checked) {
-  background: #f39160;
+  background: #C8A49F;
   color: #fff;
 }
 
@@ -244,7 +204,7 @@ button {
   height: 20px;
   border: none;
   border-radius: 999px;
-  background: #f39160;
+  background: #9b6e5f;
   color: #fff;
   cursor: pointer;
   font-size: 0.8rem;
@@ -268,4 +228,4 @@ button {
   min-height: 600px;
   border: none;
   border-radius: 12px;
-} */
+}

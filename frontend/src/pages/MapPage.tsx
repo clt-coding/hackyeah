@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { places } from "../data/places";
+import '../styles/MapPage.scss';
 
 export default function MapPage() {
   const [searchParams] = useSearchParams();
