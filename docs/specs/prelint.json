@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "exclude_authors": ["dependabot[bot]", "renovate[bot]", "github-actions[bot]"],
+  "trigger_mode": "auto",
+  "ignore_patterns": [
+    "lib/database.types.ts",
+    "supabase/seed.sql",
+    "public/**"
+  ],
+  "rules": [
+    {
+      "name": "Data access layer",
+      "description": "All data fetching goes through typed functions in lib/data/. Components and pages under app/ and components/ must not call supabase.from(...) directly."
+    },
+    {
+      "name": "RLS on every table",
+      "description": "Every new table in supabase/migrations/ must enable Row Level Security and define policies in the same migration."
+    },
+    {
+      "name": "Additive migrations only",
+      "description": "Migrations may add tables, columns and indexes. They must not rename or drop existing tables or columns, because all environments share one Supabase project."
+    },
+    {
+      "name": "Server-only secrets",
+      "description": "Only NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY may use the NEXT_PUBLIC_ prefix. ORS_API_KEY and SUPABASE_SERVICE_ROLE_KEY must never be used in client components or files marked 'use client'."
+    },
+    {
+      "name": "No AI in the MVP",
+      "description": "Do not add LLM SDKs, AI API calls, embeddings or vector search. AI features are planned for a later phase."
+    },
+    {
+      "name": "Approved vendors only",
+      "description": "Backend is Supabase only, maps are MapLibre or Leaflet with OpenStreetMap, routing is OpenRouteService, geocoding is Nominatim, UI is Tailwind and shadcn/ui. Flag any new vendor, SaaS, ORM or UI library."
+    },
+    {
+      "name": "Ranking explains itself",
+      "description": "Every institution ranking result must include human-readable reasons in Polish. Ranking must fall back to PostGIS straight-line distance when OpenRouteService fails."
+    },
+    {
+      "name": "Polish UI, English code",
+      "description": "User-facing text is Polish. Identifiers, comments, database names and commit messages are English. Use the domain names from docs/PRODUCT_SPEC.md section 12."
+    }
+  ],
+  "output": {
+    "comments": true,
+    "check_run": true
+  }
+}
