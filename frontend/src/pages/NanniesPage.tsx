@@ -1,3 +1,7 @@
 export default function NanniesPage() {
-  return <div>Nianie</div>;
+  return (
+    <div className="mainNanniesPage">
+      <p></p>
+    </div>
+  );
 }
