@@ -23,6 +23,7 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "node": "^22.23.3",
     "temporal-polyfill": "^1.0.5"
   },
   "devDependencies": {
