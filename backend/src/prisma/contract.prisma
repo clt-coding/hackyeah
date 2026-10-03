@@ -12,7 +12,7 @@ model User {
     email         String    @unique
     name          String
     surname       String
-    type          Type
+    type          Int
     password_hash String
     createdAt     DateTime  @default(now())
     updatedAt     DateTime  @default(now())
