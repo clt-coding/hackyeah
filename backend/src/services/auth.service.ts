@@ -8,6 +8,7 @@ import type { UserPayload } from "../types/user.js";
 const jwt = (jwtPkg as any).default || jwtPkg;
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
+
 export async function loginUser(email: string, password: string) {
     const user = await db.orm.public.User.first({
         email: email,
