@@ -1,0 +1,1 @@
+miejsce gdzie wspolne rzeczy do apki beda, typu hooks, types, utils itp
