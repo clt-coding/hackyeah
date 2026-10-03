@@ -24,3 +24,15 @@ dist-ssr
 *.sw?
 
 .env
+
+**/prisma/contract.d.ts
+**/prisma/contract.json
+
+.agents/
+.claude/
+.cursor/
+.devin/
+.vscode/
+.idea/
+
+Thumbs.db

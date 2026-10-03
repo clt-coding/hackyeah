@@ -1,0 +1,72 @@
+// use prisma-8
+
+// Enum
+enum Type {
+    MOM
+    NANNY
+}
+
+// Tables schema
+model User {
+    id            String    @id @default(uuid())
+    email         String    @unique
+    name          String
+    surname       String
+    type          Type
+    password_hash String
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @default(now())
+    addresses     Address[]
+    nannies       Nanny[]
+
+    @@map("user")
+}
+
+model Address {
+    id              String   @id @default(uuid())
+    userId          String
+    type            Int
+    name            String
+    country         String
+    postalCode      String
+    city            String
+    street          String
+    building_number String
+    unit_number     String?
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("address")
+}
+
+model Nanny {
+    id           String  @id @default(uuid())
+    userId       String  @unique
+    phone_number String
+    rating       Float?  @default(0)
+    rating_count Int?    @default(0)
+    hourly_wage  Float   @default(0)
+    availability Boolean @default(true)
+
+    user User @relation(fields: [userId], references: [id])
+
+    @@map("nanny")
+}
+
+model Institution {
+    id              String   @id @default(uuid())
+    name            String
+    type            Int
+    country         String
+    postalCode      String
+    city            String
+    street          String
+    building_number String
+    unit_number     String?
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @default(now())
+
+    @@map("institution")
+}
