@@ -1,7 +1,26 @@
+import { useNavigate } from 'react-router-dom';
+
 export default function TopNav() {
+  const navigate = useNavigate();
+
   return (
     <header className="top-nav">
-      <span className="top-nav-brand">MOMent</span>
+      <img 
+        src="/MOMent.png" 
+        className="logo" 
+        onClick={() => navigate('/')} 
+        alt="Logo"
+      />
+      
+      <div className="top-nav-buttons">
+        <button className="nav-btn" onClick={() => navigate('/map')}>
+          Map
+        </button>
+        <button className="nav-btn" onClick={() => navigate('/nannies')}>
+          Nannies
+        </button>
+        <img src="/user.jpg" className="user" onClick={() => navigate('/login')} alt="User" />
+      </div>
     </header>
   );
 }
