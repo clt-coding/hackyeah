@@ -1,7 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function TopNav() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const hideNavRoutes = ['/login', '/register'];
+  if (hideNavRoutes.includes(location.pathname)) {
+    return null;
+  }
 
   return (
     <header className="top-nav">
