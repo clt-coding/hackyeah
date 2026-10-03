@@ -1,30 +1,23 @@
 import { useNavigate } from "react-router-dom"; 
-import "../styles/LoginPage.scss";
+import "../styles/RegisterPage.scss";
 import logo from "../assets/logo.png";
 
-export default function LoginPage() {
+export default function RegisterPage() {
     const navigate = useNavigate();
-    const handleLogin = () => {
+    const handleRegister = () => {
         navigate("/");
     };
-    const handleRegister = () => {
-        navigate("/register");
-    }
   return (
-    <div className="login-container">
-      <div className="login-box">
+    <div className="register-container">
+      <div className="register-box">
 
         <img src={logo} alt="MOMent-logo" className="logo" />
 
         <input type="text" placeholder="Login" className="input" />
         <input type="password" placeholder="Password" className="input" />
 
-        <button className="login-btn" onClick={handleLogin}>
-            Log in
-        </button>
-
         <button className="register-btn" onClick={handleRegister}>
-          Don't have an account? Register
+            Register
         </button>
 
       </div>
