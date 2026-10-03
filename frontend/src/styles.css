@@ -3,14 +3,14 @@
 }
 
 .top-nav {
-  color: #f39160;
+  color: #4D0E13;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   margin: 0;
   padding: 16px 24px;
-  background: rgb(252, 235, 218);
+  background: #b6a999;
   border-radius: 0;
   height: 4rem;
 }
@@ -52,7 +52,7 @@ button {
 }
 
 .littleText {
-  color: #f39160;
+  color: rgb(0, 0, 0);
   text-align: center;
   font-family: "Ovo", serif;
   font-size: 1rem;
@@ -114,7 +114,7 @@ button {
 
 .category-subtitle {
   margin: 0;
-  color: #8a8178;
+  color: #544d45;
   font-size: 0.95rem;
 }
 
@@ -124,15 +124,15 @@ button {
 }
 
 .tone-pink {
-  background: #fbe0d8;
+  background: #C8A49F;
 }
 
 .tone-green {
-  background: #e3efe6;
+  background: #b6a999;
 }
 
 .tone-purple {
-  background: #e6e1f2;
+  background: #9b6e5f;
 }
 
 .search-card {
@@ -164,7 +164,7 @@ button {
 }
 
 .search-field-icon {
-  color: #f39160;
+  color: #4D0E13;
   font-size: 1.1rem;
 }
 
@@ -221,12 +221,12 @@ button {
 }
 
 .btn-primary {
-  background: #f39160;
+  background: #4D0E13;
   color: #fff;
 }
 
 .btn-primary:hover {
-  background: #c05f3d;
+  background: #4D0E13;
 }
 
 .btn-pill {
