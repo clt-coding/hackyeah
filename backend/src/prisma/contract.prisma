@@ -69,8 +69,8 @@ model Institution {
     unit_number     String?
     lat             Float?
     lng             Float?
-    opening_hours   String
-    closing_hours   String
+    opening_hours   Time
+    closing_hours   Time
     createdAt       DateTime @default(now())
     updatedAt       DateTime @default(now())
 
@@ -88,8 +88,8 @@ model Daycare {
     unit_number     String?
     lat             Float?
     lng             Float?
-    opening_hours   String
-    closing_hours   String
+    opening_hours   Time
+    closing_hours   Time
     createdAt       DateTime @default(now())
     updatedAt       DateTime @default(now())
 
