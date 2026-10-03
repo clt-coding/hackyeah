@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import MapPage from './pages/MapPage';
-import NanniesPage from './pages/Nannies';
+import NanniesPage from './pages/NanniesPage';
 import TopNav from './components/TopNav';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';

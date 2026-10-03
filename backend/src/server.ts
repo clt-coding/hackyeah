@@ -1,9 +1,10 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { db } from './libs/db.js';
 
-import authMiddleware from './middlewares/auth.middleware.js';
+import { authenticateToken } from './middlewares/auth.middleware.js';
 
 import authRouter from './routes/auth.route.js';
 import userRouter from './routes/user.route.js';
@@ -13,7 +14,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  credentials: true,
+}));
+
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -37,7 +43,7 @@ app.get('/api/health', async (_req: Request, res: Response) => {
 
 app.use('/api/auth', authRouter);
 
-app.use(authMiddleware);
+app.use(authenticateToken);
 
 app.use('/api/user', userRouter);
 

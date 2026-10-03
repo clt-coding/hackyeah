@@ -1,3 +1,3 @@
 export default function MapPage() {
-  return <div></div>;
+  return <div>Mapeczka</div>;
 }
