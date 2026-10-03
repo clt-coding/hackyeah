@@ -3,22 +3,17 @@ export async function geocodeAddress(
   houseNumber: string,
   city: string,
 ) {
-  const url = new URL(
-    "https://api.openrouteservice.org/geocode/search/structured",
-  );
-  url.searchParams.set("api_key", process.env.ORS_API_KEY!);
-  url.searchParams.set("address", `${street} ${houseNumber}`);
-  url.searchParams.set("locality", city);
-  url.searchParams.set("country", "PL");
-  url.searchParams.set("size", "1");
+  const url = new URL("https://services.gugik.gov.pl/uug/");
+  url.searchParams.set("request", "GetAddress");
+  url.searchParams.set("address", `${city}, ${street} ${houseNumber}`);
+  url.searchParams.set("srid", "4326");
 
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`ORS error ${res.status}`);
+  if (!res.ok) throw new Error(`UUG error ${res.status}: ${await res.text()}`);
 
   const data = await res.json();
-  const feature = data.features?.[0];
-  if (!feature) return null; // nie znaleziono adresu
+  const r = data.results?.["1"];
+  if (!r) return null; // nie znaleziono adresu
 
-  const [lng, lat] = feature.geometry.coordinates; // uwaga: lng jest PIERWSZE
-  return { lat, lng };
+  return { lat: Number(r.y), lng: Number(r.x) };
 }
