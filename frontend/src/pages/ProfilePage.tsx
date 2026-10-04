@@ -38,7 +38,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/user/me`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -48,7 +48,6 @@ export default function ProfilePage() {
             navigate('/login');
             return;
           }
-          // ADD THIS: Read the actual error from the backend response
           const errData = await res.json().catch(() => null);
           throw new Error(errData?.error || `Failed to load profile (Status: ${res.status})`);
         }
