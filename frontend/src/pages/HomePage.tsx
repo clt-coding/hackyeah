@@ -5,7 +5,6 @@ import '../styles/HomePage.scss';
 
 const TIMES = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
 
-
 export default function HomePage() {
   const navigate = useNavigate();
   // tutaj bedzie sie aktualizowalo z wpisywaniem i powinnismy moc to wyslac
@@ -97,12 +96,14 @@ export default function HomePage() {
           icon="building"
           title="Find daycares"
           subtitle="Verified centers near work"
+          onClick={() => navigate("/map#daycare")}
         />
         <CategoryCard
           tone="purple"
           icon="palette"
           title="Find activities"
           subtitle="After-school enrichment"
+          onClick={() => navigate("/map#institutions")}
         />
       </div>
     </div>
