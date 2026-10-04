@@ -1,5 +1,4 @@
 import type { Nanny } from '../types';
-import Icon from './Icon';
 import '../styles/NannyCard.scss';
 
 export default function NannyCard({ nanny }: { nanny: Nanny }) {
@@ -32,13 +31,10 @@ export default function NannyCard({ nanny }: { nanny: Nanny }) {
           <div className="nanny-ratings">
             <div className="stars">
               {[...Array(5)].map((_, i) => (
-                <Icon 
+                <i 
                   key={i} 
-                  name="star" 
-                  size={14} 
-                  filled={i < Math.floor(nanny.rating)} 
-                  className="star-icon"
-                />
+                  className={i < Math.floor(nanny.rating) ? "fa-solid fa-star" : "fa-regular fa-star"}
+                ></i>
               ))}
             </div>
             <span className="reviews-text">{nanny.reviewsCount} opinions</span>
@@ -56,10 +52,7 @@ export default function NannyCard({ nanny }: { nanny: Nanny }) {
                   className={`day-box ${isAvailable ? 'available' : 'unavailable'}`}
                 >
                   <span className="day-name">{day}</span>
-                  <Icon 
-                    name={isAvailable ? 'check' : 'cross'} 
-                    size={10} 
-                  />
+                  <i className={isAvailable ? "fa-utility-fill fa-semibold fa-check" : "fa-solid fa-xmark"}></i>
                 </div>
               );
             })}
