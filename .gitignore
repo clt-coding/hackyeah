@@ -26,9 +26,6 @@ dist-ssr
 
 .env
 
-**/prisma/contract.d.ts
-**/prisma/contract.json
-
 .agents/
 .claude/
 .cursor/

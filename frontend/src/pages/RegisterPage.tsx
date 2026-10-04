@@ -129,7 +129,7 @@ export default function RegisterPage() {
 
     let res: Response;
     try {
-      res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+      res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
