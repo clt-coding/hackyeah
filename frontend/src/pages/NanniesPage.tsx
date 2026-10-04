@@ -40,7 +40,9 @@ export default function NanniesPage() {
 
       <div className="nannies-list">
         {Array.isArray(nannies) && nannies.length > 0 ? (
-          nannies.map((nanny) => <NannyCard key={nanny.id} nanny={nanny} />)
+          nannies.map((nanny, index) => (
+            <NannyCard key={nanny.id} nanny={nanny} index={index} />
+          ))
         ) : (
           <p>No nannies found or invalid data format.</p>
         )}

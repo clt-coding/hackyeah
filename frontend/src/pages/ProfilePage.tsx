@@ -111,7 +111,7 @@ export default function ProfilePage() {
             <div className="info-item">
               <span className="label">Account Type:</span>
               <span className="value">
-                {profile.type === 1 ? 'Parent' : profile.type === 2 ? 'Nanny' : `Type ${profile.type}`}
+                {profile.type === 1 ? 'Parent' : profile.type === 0 ? 'Nanny' : `Type ${profile.type}`}
               </span>
             </div>
           </div>
