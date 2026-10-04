@@ -1,6 +1,5 @@
 $color-text: #1a1a1a;
 $color-text-muted: #6b6b6b;
-$color-bg: rgb(254 248 242);
 $color-bg-muted: #f3f3f3;
 $color-border: #d5c7b5;
 $color-logo: #4C0E11;
@@ -24,7 +23,6 @@ html, body, #root {
   min-height: 100vh;
   height: auto !important;
   width: 100%;
-  background-color: $color-bg;
   padding: 40px 20px;
   box-sizing: border-box;
 
@@ -99,6 +97,52 @@ html, body, #root {
           border-bottom: 1px solid #f1f5f9;
           padding-bottom: 6px;
         }
+      }
+
+      .role-section {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        margin: 8px 0 0;
+        padding: 0;
+        border: 0;
+
+        .section-title {
+          margin: 0;
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #475569;
+        }
+
+        .role-options {
+          display: flex;
+          gap: 16px;
+        }
+
+        .role-option {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          color: $color-text;
+          font-size: 0.95rem;
+          cursor: pointer;
+        }
+
+        .error-text {
+          color: #ef4444;
+          font-size: 0.78rem;
+          margin: 0 0 0 4px;
+        }
+      }
+
+      .availability-option {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: $color-text;
+        font-size: 0.95rem;
+        cursor: pointer;
       }
 
       .input-row {

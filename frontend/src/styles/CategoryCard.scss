@@ -5,6 +5,22 @@
   min-height: 320px;
   border-radius: 28px;
   padding: 32px;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.category-card:hover {
+  filter: brightness(0.96);
+  transform: translateY(-2px);
+}
+
+.category-card:focus-visible {
+  outline: 3px solid #4d0e13;
+  outline-offset: 3px;
 }
 
 .category-icon {

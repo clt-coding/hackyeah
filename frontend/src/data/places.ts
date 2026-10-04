@@ -4,7 +4,7 @@ import type { Place } from "../types";
 // do ui-a, jak dostaniemy api to wyrzucimy.
 export const places: Place[] = [
   {
-    id: 1,
+    id: "1",
     name: "Place 1",
     type: "daycare",
     distance: "0.6 km",
@@ -14,7 +14,7 @@ export const places: Place[] = [
     description: "opis miejsca 1 placeholder blah blah blah blah balh",
   },
   {
-    id: 2,
+    id: "2",
     name: "Place 2",
     type: "activity",
     distance: "1.2 km",
@@ -24,7 +24,7 @@ export const places: Place[] = [
     description: "opis miejsca 2 placeholder blah blah blah blah balh",
   },
   {
-    id: 3,
+    id: "3",
     name: "Place 3",
     type: "daycare",
     distance: "6.9 km ",
