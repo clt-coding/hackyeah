@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import type { Facility } from "../map-script";
 import "../styles/MapPage.scss";
 
 export default function MapPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
+    null,
+  );
+  const [institutionsError, setInstitutionsError] = useState<string | null>(
     null,
   );
 
@@ -15,7 +19,10 @@ export default function MapPage() {
   const [distanceFrom, setDistanceFrom] = useState(
     searchParams.get("location") ?? "",
   );
+  const [houseNumber, setHouseNumber] = useState("");
+  const [radiusKm, setRadiusKm] = useState(5);
   const [time, setTime] = useState(searchParams.get("time") ?? "");
+  const [age, setAge] = useState("");
   const [showInstitutions, setShowInstitutions] = useState(true);
   const [showDaycares, setShowDaycares] = useState(true);
 
@@ -24,6 +31,9 @@ export default function MapPage() {
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === "SELECT_FACILITY") {
         setSelectedFacility(event.data.facility);
+      }
+      if (event.data?.type === "INSTITUTIONS_ERROR") {
+        setInstitutionsError(event.data.message);
       }
     };
 
@@ -42,12 +52,30 @@ export default function MapPage() {
             showDaycares,
             searchQuery: distanceFrom,
             time,
+            age: age ? Number(age) : undefined,
           },
         },
         "*",
       );
     }
-  }, [showInstitutions, showDaycares, distanceFrom, time]);
+  }, [showInstitutions, showDaycares, distanceFrom, time, age]);
+
+  // 3. Wysyłane tylko po kliknięciu "Apply Filters" - geocoding jest kosztowny
+  function applyWorkplaceFilter() {
+    if (iframeRef.current?.contentWindow) {
+      iframeRef.current.contentWindow.postMessage(
+        {
+          type: "APPLY_FILTERS",
+          filters: {
+            street: distanceFrom,
+            houseNumber,
+            radiusKm,
+          },
+        },
+        "*",
+      );
+    }
+  }
 
   const facilityName = selectedFacility
     ? selectedFacility.category === "INSTITUTION"
@@ -56,7 +84,12 @@ export default function MapPage() {
     : "Select a point on the map";
 
   const facilityAddress = selectedFacility
-    ? `${selectedFacility.street} ${selectedFacility.house_number}, ${selectedFacility.city}`
+    ? [
+        `${selectedFacility.street} ${selectedFacility.house_number}`.trim(),
+        selectedFacility.city,
+      ]
+        .filter(Boolean)
+        .join(", ")
     : "Click any marker to view full location details.";
 
   return (
@@ -66,13 +99,35 @@ export default function MapPage() {
         <div className="filters-title">FILTERS</div>
 
         <fieldset className="filter-group">
-          <legend>Distance from</legend>
+          <legend>Workplace address</legend>
           <input
             type="text"
-            placeholder="Workplace address / street"
+            placeholder="Street"
             value={distanceFrom}
             onChange={(e) => setDistanceFrom(e.target.value)}
           />
+          <input
+            type="text"
+            placeholder="House number"
+            value={houseNumber}
+            onChange={(e) => setHouseNumber(e.target.value)}
+          />
+          <legend className="smallLegend">Radius</legend>
+          <input
+            type="number"
+            min={1}
+            max={50}
+            placeholder="Radius (km)"
+            value={radiusKm}
+            onChange={(e) => setRadiusKm(Number(e.target.value))}
+          />
+          <button
+            type="button"
+            className="apply-btn"
+            onClick={applyWorkplaceFilter}
+          >
+            Apply Filters
+          </button>
         </fieldset>
 
         <fieldset className="filter-group">
@@ -86,7 +141,13 @@ export default function MapPage() {
 
         <fieldset className="filter-group">
           <legend>Age group</legend>
-          <input type="text" placeholder="e.g. 2 years" />
+          <input
+            type="number"
+            min={0}
+            placeholder="e.g. 2"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+          />
         </fieldset>
 
         <fieldset className="filter-group">
@@ -173,6 +234,37 @@ export default function MapPage() {
           </p>
         )}
       </aside>
+
+      {institutionsError && (
+        <div
+          className="modal-overlay"
+          onClick={() => setInstitutionsError(null)}
+        >
+          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+            <h3>Can't search near your workplace yet</h3>
+            <p>
+              You need to be logged in with a home address saved to your account
+              before we can search for institutions near you.
+            </p>
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="apply-btn"
+                onClick={() => navigate("/login")}
+              >
+                Log in
+              </button>
+              <button
+                type="button"
+                className="modal-dismiss"
+                onClick={() => setInstitutionsError(null)}
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

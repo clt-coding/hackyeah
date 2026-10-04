@@ -74,6 +74,22 @@
           border-bottom-color: #c8a49f;
         }
       }
+
+      .apply-btn {
+        margin-top: 12px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        background: #9b6e5f;
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+          background: #85594c;
+        }
+      }
     }
 
     .chip-row {
@@ -235,4 +251,55 @@
       }
     }
   }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .modal-box {
+      background: #fff;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 360px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+
+      h3 {
+        margin: 0 0 12px;
+        color: #2b2420;
+      }
+
+      p {
+        margin: 0 0 20px;
+        color: #685a51;
+        font-size: 0.9rem;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .modal-dismiss {
+        padding: 8px 16px;
+        border-radius: 6px;
+        background: none;
+        border: 1px solid #e1cdb3;
+        color: #685a51;
+        cursor: pointer;
+
+        &:hover {
+          background: #f4efe4;
+        }
+      }
+    }
+  }
+}
+
+.smallLegend {
+  margin-top: 10px;
 }

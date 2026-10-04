@@ -1,4 +1,9 @@
 import { getDaycares, type Daycare as RawDaycare } from "./api/daycares";
+import {
+  getNearbyInstitutions,
+  ageToInstitutionType,
+  type Institution as RawInstitution,
+} from "./api/institutions";
 
 declare const L: any;
 
@@ -21,7 +26,7 @@ export interface Institution extends BaseLocation {
   category: "INSTITUTION";
   institution_name: string;
   type: string;
-  public_status: string;
+  public_status?: string;
   address_www?: string;
 }
 
@@ -42,13 +47,13 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 const markersGroup = L.layerGroup().addTo(map);
 
-// zostawiamy instytucje zmockowane az nie dzialaja,
+// zostawiamy instytucje zmockowane az nie dzialaja, daycares sa prawdziwe
 const mockInstitutions: Facility[] = [
   {
     id: "inst-1",
     category: "INSTITUTION",
     institution_name: "Przedszkole Samorządowe Nr 5",
-    type: "Przedszkole",
+    type: "Kindergarten",
     public_status: "Publiczne",
     city: "Kraków",
     street: "ul. Stachiewicza",
@@ -63,7 +68,7 @@ const mockInstitutions: Facility[] = [
     id: "inst-2",
     category: "INSTITUTION",
     institution_name: "Przedszkole Samorządowe Nr 76",
-    type: "Przedszkole",
+    type: "Kindergarten",
     public_status: "Publiczne",
     city: "Kraków",
     street: "ul. Emaus",
@@ -77,6 +82,14 @@ const mockInstitutions: Facility[] = [
 ];
 
 let allData: Facility[] = [...mockInstitutions];
+let realDaycares: Facility[] = [];
+// null = not loaded yet (or last load failed) -> fall back to mockInstitutions
+let realInstitutions: Facility[] | null = null;
+let lastInstitutionQuery = "";
+
+function rebuildData() {
+  allData = [...(realInstitutions ?? mockInstitutions), ...realDaycares];
+}
 
 function daycareToFacility(daycare: RawDaycare): Facility | null {
   if (daycare.lat == null || daycare.lng == null) return null;
@@ -95,15 +108,76 @@ function daycareToFacility(daycare: RawDaycare): Facility | null {
   };
 }
 
+const INSTITUTION_TYPE_LABEL: Record<0 | 1, string> = {
+  0: "Kindergarten",
+  1: "Nursery",
+};
+
+function institutionToFacility(institution: RawInstitution): Facility {
+  return {
+    id: institution.id,
+    category: "INSTITUTION",
+    institution_name: institution.name,
+    type: INSTITUTION_TYPE_LABEL[institution.type],
+    // backend only gives one preformatted address string, not separate fields
+    city: "",
+    street: institution.address,
+    house_number: "",
+    opening_hour: institution.opening_hours,
+    closing_hour: institution.closing_hours,
+    lat: institution.lat,
+    lng: institution.lng,
+  };
+}
+
+// Only refetch when the actual address/radius values change, not on every
+// unrelated filter change (e.g. toggling Time shouldn't hit the network).
+function maybeFetchInstitutions(
+  street: string,
+  houseNumber: string,
+  radiusKm: number,
+) {
+  if (!street || !houseNumber || !radiusKm) return;
+
+  const queryKey = `${street}|${houseNumber}|${radiusKm}`;
+  if (queryKey === lastInstitutionQuery) return;
+  lastInstitutionQuery = queryKey;
+
+  getNearbyInstitutions(street, houseNumber, radiusKm)
+    .then((institutions) => {
+      realInstitutions = institutions.map(institutionToFacility);
+      rebuildData();
+      renderMarkers();
+    })
+    .catch((err) => {
+      // Expected for now: user not logged in, or no home address saved yet.
+      // Keep whatever institutions we already had (mock, most likely), and
+      // let the parent page show a proper popup about it.
+      console.warn("Could not load nearby institutions:", err.message);
+      if (window.parent) {
+        window.parent.postMessage(
+          { type: "INSTITUTIONS_ERROR", message: err.message },
+          "*",
+        );
+      }
+    });
+}
+
 getDaycares().then((daycares) => {
-  const realDaycares = daycares
+  realDaycares = daycares
     .map(daycareToFacility)
     .filter((f): f is Facility => f !== null);
-  allData = [...mockInstitutions, ...realDaycares];
+  rebuildData();
   renderMarkers();
 });
 
-let currentFilters = {
+let currentFilters: {
+  showInstitutions: boolean;
+  showDaycares: boolean;
+  searchQuery: string;
+  time: string;
+  age?: number;
+} = {
   showInstitutions: true,
   showDaycares: true,
   searchQuery: "",
@@ -142,6 +216,13 @@ function renderMarkers() {
       }
     }
 
+    // 4. Filtrowanie po wieku dziecka (tylko instytucje maja ten podzial)
+    if (currentFilters.age !== undefined && item.category === "INSTITUTION") {
+      const expectedType =
+        INSTITUTION_TYPE_LABEL[ageToInstitutionType(currentFilters.age)];
+      if (item.type !== expectedType) return false;
+    }
+
     return true;
   });
 
@@ -167,6 +248,12 @@ function renderMarkers() {
 window.addEventListener("message", (event) => {
   if (event.data?.type === "APPLY_FILTERS") {
     currentFilters = { ...currentFilters, ...event.data.filters };
+
+    const { street, houseNumber, radiusKm } = event.data.filters;
+    if (street !== undefined && houseNumber !== undefined && radiusKm !== undefined) {
+      maybeFetchInstitutions(street, houseNumber, radiusKm);
+    }
+
     renderMarkers();
   }
 });
