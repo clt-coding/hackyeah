@@ -1,6 +1,45 @@
 import { Request, Response } from 'express';
 import * as userService from '../services/user.service.js';
 
+
+async function resolveUserId(req: Request): Promise<string | undefined> {
+    const payload = (req as any).user;
+
+    if (typeof payload?.id === 'string' && payload.id) return payload.id;
+    if (typeof payload?.sub === 'string' && payload.sub) return payload.sub;
+
+    const claim = payload?.email;
+    if (claim && typeof claim === 'object' && typeof claim.id === 'string' && claim.id) {
+        return claim.id;
+    }
+    if (typeof claim === 'string' && claim) {
+        return userService.getUserIdByEmail(claim);
+    }
+    return undefined;
+}
+
+export async function getMe(req: Request, res: Response) {
+    try {
+        const userId = await resolveUserId(req);
+
+        if (!userId) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const user = await userService.getUserById(userId);
+
+        return res.status(200).json({ user });
+    } catch (error) {
+        const message = (error as Error).message;
+
+        if (message === 'User not found') {
+            return res.status(404).json({ error: message });
+        }
+
+        return res.status(500).json({ error: message });
+    }
+}
+
 export async function updateUser(req: Request, res: Response) {
     const userId = req.user?.id;
 

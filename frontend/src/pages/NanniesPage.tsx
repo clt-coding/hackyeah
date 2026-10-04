@@ -1,7 +1,11 @@
+import NannyCard from '../components/NannyCard';
+import '../styles/NanniesPage.scss';
+import type { Nanny } from '../types';
 import { useState, useEffect } from "react";
 import NannyCard from "../components/NannyCard";
 import "../styles/NanniesPage.scss";
 import type { Nanny } from "../types";
+import { getNannies } from "../api/nannies";
 
 export default function NanniesPage() {
   const [nannies, setNannies] = useState<Nanny[]>([]);
@@ -9,31 +13,10 @@ export default function NanniesPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchNannies = async () => {
-      try {
-        const apiUrl = import.meta.env.VITE_API_URL;
-
-        const response = await fetch(`${apiUrl}/nannies`, {
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch nannies data");
-        }
-
-        const data = await response.json();
-        setNannies(data?.nannies);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchNannies();
+    getNannies()
+      .then(setNannies)
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setIsLoading(false));
   }, []);
 
   if (isLoading) {
