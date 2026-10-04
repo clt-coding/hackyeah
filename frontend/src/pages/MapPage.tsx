@@ -1,49 +1,58 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { Facility } from "../map-script";
-import '../styles/MapPage.scss';
+import "../styles/MapPage.scss";
 
 export default function MapPage() {
   const [searchParams] = useSearchParams();
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(null);
+  const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
+    null,
+  );
 
   // Stany filtrów
-  const [distanceFrom, setDistanceFrom] = useState(searchParams.get("location") ?? "");
+  const [distanceFrom, setDistanceFrom] = useState(
+    searchParams.get("location") ?? "",
+  );
   const [time, setTime] = useState(searchParams.get("time") ?? "");
-  const [kidsCount, setKidsCount] = useState(1);
   const [showInstitutions, setShowInstitutions] = useState(true);
   const [showDaycares, setShowDaycares] = useState(true);
 
   // 1. Odbieranie kliknięcia z mapy
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'SELECT_FACILITY') {
+      if (event.data?.type === "SELECT_FACILITY") {
         setSelectedFacility(event.data.facility);
       }
     };
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
   }, []);
 
   // 2. Wysyłanie filtrów do iframe przy każdej zmianie stanu
   useEffect(() => {
     if (iframeRef.current?.contentWindow) {
-      iframeRef.current.contentWindow.postMessage({
-        type: 'APPLY_FILTERS',
-        filters: {
-          showInstitutions,
-          showDaycares,
-          searchQuery: distanceFrom,
-        }
-      }, '*');
+      iframeRef.current.contentWindow.postMessage(
+        {
+          type: "APPLY_FILTERS",
+          filters: {
+            showInstitutions,
+            showDaycares,
+            searchQuery: distanceFrom,
+            time,
+          },
+        },
+        "*",
+      );
     }
-  }, [showInstitutions, showDaycares, distanceFrom]);
+  }, [showInstitutions, showDaycares, distanceFrom, time]);
 
   const facilityName = selectedFacility
-    ? (selectedFacility.category === 'INSTITUTION' ? selectedFacility.institution_name : selectedFacility.name)
+    ? selectedFacility.category === "INSTITUTION"
+      ? selectedFacility.institution_name
+      : selectedFacility.name
     : "Select a point on the map";
 
   const facilityAddress = selectedFacility
@@ -69,8 +78,7 @@ export default function MapPage() {
         <fieldset className="filter-group">
           <legend>Time</legend>
           <input
-            type="text"
-            placeholder="8:30 AM"
+            type="time"
             value={time}
             onChange={(e) => setTime(e.target.value)}
           />
@@ -79,29 +87,6 @@ export default function MapPage() {
         <fieldset className="filter-group">
           <legend>Age group</legend>
           <input type="text" placeholder="e.g. 2 years" />
-        </fieldset>
-
-        <fieldset className="filter-group">
-          <legend>Availability</legend>
-          <div className="adder">
-            <span className="adder-value">{kidsCount}</span>
-            <button
-              type="button"
-              className="adder-btn"
-              aria-label="Decrease number of kids"
-              onClick={() => setKidsCount(Math.max(1, kidsCount - 1))}
-            >
-              <i className="fa-solid fa-minus" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              className="adder-btn"
-              aria-label="Increase number of kids"
-              onClick={() => setKidsCount(kidsCount + 1)}
-            >
-              <i className="fa-solid fa-plus" aria-hidden="true" />
-            </button>
-          </div>
         </fieldset>
 
         <fieldset className="filter-group">
@@ -147,11 +132,15 @@ export default function MapPage() {
         {selectedFacility ? (
           <>
             <div className="details-meta">
-              <span className={`type-tag tag-${selectedFacility.category.toLowerCase()}`}>
+              <span
+                className={`type-tag tag-${selectedFacility.category.toLowerCase()}`}
+              >
                 {selectedFacility.category}
               </span>
               <span className="muted small">
-                {selectedFacility.category === 'INSTITUTION' ? selectedFacility.type : 'Private'}
+                {selectedFacility.category === "INSTITUTION"
+                  ? selectedFacility.type
+                  : "Private"}
               </span>
             </div>
 
@@ -161,20 +150,22 @@ export default function MapPage() {
             <ul className="details-list">
               <li>
                 <i className="fa-regular fa-clock" aria-hidden="true" />
-                {selectedFacility.opening_hour} - {selectedFacility.closing_hour}
+                {selectedFacility.opening_hour} -{" "}
+                {selectedFacility.closing_hour}
               </li>
             </ul>
 
-            {selectedFacility.category === 'INSTITUTION' && selectedFacility.address_www && (
-              <a
-                href={selectedFacility.address_www}
-                target="_blank"
-                rel="noreferrer"
-                className="details-link"
-              >
-                Visit website
-              </a>
-            )}
+            {selectedFacility.category === "INSTITUTION" &&
+              selectedFacility.address_www && (
+                <a
+                  href={selectedFacility.address_www}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="details-link"
+                >
+                  Visit website
+                </a>
+              )}
           </>
         ) : (
           <p className="details-desc" style={{ marginTop: "20px" }}>

@@ -1,7 +1,7 @@
 import { apiCall } from "./client";
 import type { Place } from "../types";
 
-interface Daycare {
+export interface Daycare {
   id: string;
   name: string;
   country: string;
