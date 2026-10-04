@@ -12,12 +12,13 @@ export default function HomePage() {
   // do backendu -> pls look into jak serio to bedzie dzialac oki?
   const [location, setLocation] = useState("");
   // tu tak samo, tylko narazie mam mockniete placeholdery, zeby mi nie wyawalalo
-  const [time, setTime] = useState(TIMES[0]);
+  const [fromTime, setFromTime] = useState(TIMES[0]);
+  const [untilTime, setUntilTime] = useState(TIMES[0]);
 
   function onSubmit(e: SubmitEvent) {
     e.preventDefault();
     navigate(
-      `/map?location=${encodeURIComponent(location)}&time=${encodeURIComponent(time)}`,
+      `/map?location=${encodeURIComponent(location)}&time=${encodeURIComponent(fromTime)}&untilTime=${encodeURIComponent(untilTime)}`,
     );
   }
 
@@ -53,7 +54,10 @@ export default function HomePage() {
           />
           <span className="search-field-text">
             <span className="field-label">FROM</span>
-            <select value={time} onChange={(e) => setTime(e.target.value)}>
+            <select
+              value={fromTime}
+              onChange={(e) => setFromTime(e.target.value)}
+            >
               {TIMES.map((t) => (
                 <option key={t}>{t}</option>
               ))}
@@ -61,7 +65,10 @@ export default function HomePage() {
           </span>
           <span className="search-field-text">
             <span className="field-label">UNTIL</span>
-            <select value={time} onChange={(e) => setTime(e.target.value)}>
+            <select
+              value={untilTime}
+              onChange={(e) => setUntilTime(e.target.value)}
+            >
               {TIMES.map((t) => (
                 <option key={t}>{t}</option>
               ))}
@@ -83,6 +90,7 @@ export default function HomePage() {
           icon="face-smile"
           title="Find nannies"
           subtitle="Flexible one-to-one care"
+          onClick={() => navigate("/nannies")}
         />
         <CategoryCard
           tone="green"
