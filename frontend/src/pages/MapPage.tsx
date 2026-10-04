@@ -20,9 +20,10 @@ export default function MapPage() {
   const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
     null,
   );
-  const [mapNotice, setMapNotice] = useState<
-    { kind: "institutions" | "geocode"; message: string } | null
-  >(null);
+  const [mapNotice, setMapNotice] = useState<{
+    kind: "institutions" | "geocode";
+    message: string;
+  } | null>(null);
 
   // Stany filtrów
   const [distanceFrom, setDistanceFrom] = useState(
@@ -40,6 +41,7 @@ export default function MapPage() {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowInstitutions(selectedCategory !== "daycare");
     setShowDaycares(selectedCategory !== "institution");
   }, [selectedCategory]);
@@ -198,7 +200,7 @@ export default function MapPage() {
         <iframe
           ref={iframeRef}
           className="map-frame"
-          src="/map/map.html"
+          src="/map.html"
           title="MomWork Interactive Map"
         />
       </section>
