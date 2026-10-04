@@ -4,39 +4,43 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import { useAuth } from "../contexts/AuthContext";
 import "../styles/RegisterPage.scss";
 import logo from "../assets/logo.png";
 
-const registerSchema = yup.object({
-  email: yup
-    .string()
-    .email("Please enter a valid email address")
-    .required("Email is required"),
-  password: yup
-    .string()
-    .min(8, "Password must have at least 8 characters")
-    .required("Password is required"),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password")], "Passwords must be identical")
-    .required("Confirm Password is required"),
-
-  address: yup.object({
-    street: yup.string().required("Street is required"),
-    houseNumber: yup.string().required("House number is required"),
-    city: yup.string().required("City is required"),
-    postalCode: yup
+const registerSchema = yup
+  .object({
+    email: yup
       .string()
-      .matches(/^\d{2}-\d{3}$/, "Code in format XX-XXX")
-      .required("Postal code is required"),
-  }),
-}).required();
+      .email("Please enter a valid email address")
+      .required("Email is required"),
+    password: yup
+      .string()
+      .min(8, "Password must have at least 8 characters")
+      .required("Password is required"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password")], "Passwords must be identical")
+      .required("Confirm Password is required"),
+
+    address: yup.object({
+      street: yup.string().required("Street is required"),
+      houseNumber: yup.string().required("House number is required"),
+      city: yup.string().required("City is required"),
+      postalCode: yup
+        .string()
+        .matches(/^\d{2}-\d{3}$/, "Code in format XX-XXX")
+        .required("Postal code is required"),
+    }),
+  })
+  .required();
 
 type RegisterFormData = yup.InferType<typeof registerSchema>;
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState<string | null>(null);
+  const { setUser } = useAuth();
 
   const {
     register,
@@ -51,11 +55,11 @@ export default function RegisterPage() {
 
     const backendPayload = {
       email: data.email,
-      email_confirm: data.email, 
+      email_confirm: data.email,
       password: data.password,
-      password_confirm: data.confirmPassword, 
-      name: "New", 
-      surname: "User", 
+      password_confirm: data.confirmPassword,
+      name: "New",
+      surname: "User",
       type: 1,
     };
 
@@ -72,10 +76,16 @@ export default function RegisterPage() {
       return;
     }
 
+    const body = await res.json().catch(() => null);
+
     if (!res.ok) {
       const body = await res.json().catch(() => null);
       setServerError(body?.error ?? "Registration failed");
       return;
+    }
+
+    if (body?.user) {
+      setUser(body.user);
     }
 
     console.log("Registration ok");
@@ -95,7 +105,9 @@ export default function RegisterPage() {
               className="input"
               {...register("email")}
             />
-            {errors.email && <p className="error-text">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="error-text">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="input-field">
@@ -105,7 +117,9 @@ export default function RegisterPage() {
               className="input"
               {...register("password")}
             />
-            {errors.password && <p className="error-text">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="error-text">{errors.password.message}</p>
+            )}
           </div>
 
           <div className="input-field">
@@ -144,7 +158,9 @@ export default function RegisterPage() {
                   {...register("address.houseNumber")}
                 />
                 {errors.address?.houseNumber && (
-                  <p className="error-text">{errors.address.houseNumber.message}</p>
+                  <p className="error-text">
+                    {errors.address.houseNumber.message}
+                  </p>
                 )}
               </div>
 
@@ -156,7 +172,9 @@ export default function RegisterPage() {
                   {...register("address.postalCode")}
                 />
                 {errors.address?.postalCode && (
-                  <p className="error-text">{errors.address.postalCode.message}</p>
+                  <p className="error-text">
+                    {errors.address.postalCode.message}
+                  </p>
                 )}
               </div>
             </div>
