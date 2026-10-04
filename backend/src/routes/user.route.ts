@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { updateUser, deleteUser } from '../controllers/user.controller.js';
+import { getMe, updateUser, deleteUser } from '../controllers/user.controller.js';
 
 const router = Router();
 
+router.get('/me', getMe);
 router.patch('/', updateUser);
 router.delete('/', deleteUser);
 
