@@ -71,3 +71,13 @@ export async function getNearbyInstitutions(req: Request, res: Response) {
     return res.status(500).json({ error: "Server error" });
   }
 }
+
+export async function getInstitutions(_req: Request, res: Response) {
+  try {
+    const institutions = await institutionService.getAllInstitutions();
+    return res.status(200).json({ institutions });
+  } catch (error) {
+    console.error('Institution controller error:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}

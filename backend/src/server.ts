@@ -49,7 +49,6 @@ app.get("/api/health", async (_req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRouter);
-
 app.use(authenticateToken);
 
 app.use("/api/nannies", nannyRouter);
