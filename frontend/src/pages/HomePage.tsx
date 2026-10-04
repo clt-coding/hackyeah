@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CategoryCard from "../components/CategoryCard";
 import '../styles/HomePage.scss';
 
-const TIMES = ["8 AM", "9 AM", "10 AM", "11 AM", "12 AM", "1 PM","2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM"];
+const TIMES = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"];
 
 
 export default function HomePage() {

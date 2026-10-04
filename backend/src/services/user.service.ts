@@ -92,3 +92,8 @@ export async function deleteUser(userId: string) {
         userId,
     };
 }
+
+export async function getUserIdByEmail(email: string) {
+    const user = await db.orm.public.User.first({ email });
+    return user?.id;
+}
