@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import "../styles/TopNav.scss";
 
 export default function TopNav() {
   const navigate = useNavigate();
