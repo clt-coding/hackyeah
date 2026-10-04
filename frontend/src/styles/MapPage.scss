@@ -1,232 +1,238 @@
 .MainMapPage {
-  display: grid;
-  grid-template-columns: 280px 1fr 320px;
-  gap: 24px;
-  margin: 40px 50px;
-}
-
-.filters,
-.details {
-  background: #fff;
-  border-radius: 5px;
-  padding: 24px;
-  border: 0.5px solid #e1cdb3;
-}
-
-.details {
-  align-self: start;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 16px;
-}
-
-.details .filters-title {
-  margin-bottom: 0;
-  align-self: flex-start;
-}
-
-.details-photo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 160px;
-  border-radius: 12px;
-  background: #f4efe4;
-  color: #9a8f81;
-  font-size: 0.85rem;
-}
-
-.details-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.type-tag {
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #fff;
-}
-
-.tag-daycare {
-  background: #c8a49f;
-}
-
-.tag-activity {
-  background: #b6a999;
-}
-
-.type-tag {
-  padding: 4px 12px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #fff;
-}
-.muted {
-  color: #9a8f81;
-}
-
-.small {
-  font-size: 0.8rem;
-}
-
-.details-title {
-  margin: 0;
-  font-family: "Ovo", serif;
-  font-size: 1.6rem;
-  color: #2b2420;
-}
-
-.details-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.details-list li {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #2b2420;
-  font-size: 0.9rem;
-}
-
-.details-desc {
-  margin: 0;
-  color: #9a8f81;
-  font-size: 0.9rem;
-}
-
-.details-link {
-  color: #f39160;
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-decoration: none;
-}
-
-.details-link:hover {
-  text-decoration: underline;
-}
-
-.filters-title {
-  font-weight: 700;
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  color: #2b2420;
-  margin-bottom: 20px;
-}
-
-.filter-group {
-  border: none;
-  padding: 0;
-  margin: 0 0 36px;
-}
-
-.filter-group legend {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: #9b6e5f;
-  margin-bottom: 10px;
-  padding: 0;
-}
-
-.filter-group input[type="text"],
-.filter-group input[type="number"] {
-  width: 100%;
-  border: none;
-  border-bottom: 1px solid #e2d9cb;
-  outline: none;
-  background: transparent;
-  font-family: inherit;
-  font-size: 0.95rem;
-  color: #2b2420;
-  padding: 6px 0;
-}
-
-.filter-group input[type="text"]:focus,
-.filter-group input[type="number"]:focus {
-  border-bottom-color: #c8a49f;
-}
-
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.check {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  flex: 0 0 auto;
-  width: max-content;
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: #f4efe4;
-  color: #2b2420;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.check input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.check:has(input:checked) {
-  background: #c8a49f;
-  color: #fff;
-}
-
-.adder {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.adder-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border: none;
-  border-radius: 999px;
-  background: #9b6e5f;
-  color: #fff;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.adder-value {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #2b2420;
-  min-width: 1ch;
-  text-align: center;
-}
-
-.map-place {
-  min-height: 600px;
-}
-
-.map-frame {
   width: 100%;
-  height: 100%;
-  min-height: 600px;
-  border: none;
-  border-radius: 12px;
+  height: calc(100vh - 60px); /* Dopasuj 60px do wysokości paska nawigacji */
+  overflow: hidden;
+
+  // === MAPA W TLE (Wypełnia cały ekran) ===
+  .map-place {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Mapa pod panelami */
+
+    .map-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+  }
+
+  // === LEWY PANEL: FILTRY (Pływa nad mapą po lewej) ===
+  .filters {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    width: 280px;
+    max-height: calc(100% - 48px);
+    overflow-y: auto;
+    z-index: 10; /* Nad mapą */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: 6px;
+    padding: 24px;
+    border: 0.5px solid #e1cdb3;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+
+    .filters-title {
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: #2b2420;
+      margin-bottom: 20px;
+    }
+
+    .filter-group {
+      border: none;
+      padding: 0;
+      margin: 0 0 24px;
+
+      legend {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #9b6e5f;
+        margin-bottom: 10px;
+        padding: 0;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid #e2d9cb;
+        outline: none;
+        background: transparent;
+        font-family: inherit;
+        font-size: 0.95rem;
+        color: #2b2420;
+        padding: 6px 0;
+
+        &:focus {
+          border-bottom-color: #c8a49f;
+        }
+      }
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .check {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        border-radius: 6px;
+        background: #f4efe4;
+        color: #2b2420;
+        font-size: 0.85rem;
+        cursor: pointer;
+
+        input {
+          position: absolute;
+          opacity: 0;
+        }
+
+        &:has(input:checked) {
+          background: #c8a49f;
+          color: #fff;
+        }
+      }
+    }
+
+    .adder {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .adder-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border: none;
+        border-radius: 999px;
+        background: #9b6e5f;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .adder-value {
+        font-weight: 600;
+      }
+    }
+  }
+
+  // === PRAWY PANEL: SZCZEGÓŁY (Pływa nad mapą po prawej) ===
+  .details {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 320px;
+    max-height: calc(100% - 48px);
+    overflow-y: auto;
+    z-index: 10; /* Nad mapą */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: 6px;
+    padding: 24px;
+    border: 0.5px solid #e1cdb3;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+
+    .filters-title {
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: #2b2420;
+      margin-bottom: 0;
+      align-self: flex-start;
+    }
+
+    .details-photo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 140px;
+      border-radius: 6px;
+      background: #f4efe4;
+      color: #9a8f81;
+      font-size: 0.85rem;
+    }
+
+    .details-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .type-tag {
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #fff;
+
+        &.tag-daycare {
+          background: #c8a49f;
+        }
+
+        &.tag-institution {
+          background: #b6a999;
+        }
+      }
+
+      .muted.small {
+        color: #9a8f81;
+        font-size: 0.8rem;
+      }
+    }
+
+    .details-title {
+      margin: 0;
+      // font-family: "Ovo", serif;
+      // font-size: 1.5rem;
+      color: #685a51;
+    }
+
+    .details-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #2b2420;
+        font-size: 0.9rem;
+      }
+    }
+
+    .details-desc {
+      margin: 0;
+      color: #9a8f81;
+      font-size: 0.88rem;
+    }
+
+    .details-link {
+      color: #f39160;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
