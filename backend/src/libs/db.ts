@@ -1,5 +1,4 @@
 // src/prisma/db.ts
-import 'temporal-polyfill/full/global';
 import 'dotenv/config';
 import { Temporal } from '@js-temporal/polyfill';
 
