@@ -14,6 +14,7 @@ export default function NannyCard({ nanny }: { nanny: Nanny }) {
       <div className="nanny-photo-container">
         {/* photoUrl is missing, so the default avatar will show */}
         <img src={nanny.photoUrl || "/default-avatar.jpg"} alt={nanny.user?.name || 'Nanny'} />
+        <img src="/nannies/abbat1-girl-6093779_1920.jpg"/>
         <div className="photo-overlay"></div>
         
         <div className="nanny-header-text">
