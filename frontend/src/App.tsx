@@ -15,6 +15,10 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/map" element={<MapPage />} />
+          <Route path="/map#daycare" element={<MapPage />} />
+          {/* <Route path="/map/daycares" element={<MapPage />} /> */}
+          <Route path="/map#institution" element={<MapPage />} />
+          {/* <Route path="/map/institutions" element={<MapPage />} /> */}
           <Route path="/nannies" element={<NanniesPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />

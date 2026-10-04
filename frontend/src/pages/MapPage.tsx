@@ -1,12 +1,21 @@
 import { useState, useEffect, useRef } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import type { Facility } from "../map-script";
 import "../styles/MapPage.scss";
 
 export default function MapPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const selectedCategory =
+    location.pathname === "/map#daycare" ||
+    location.pathname === "/map#daycares"
+      ? "daycare"
+      : location.pathname === "/map#institution" ||
+          location.pathname === "/map#institutions"
+        ? "institution"
+        : null;
 
   const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
     null,
@@ -23,8 +32,17 @@ export default function MapPage() {
   const [radiusKm, setRadiusKm] = useState(5);
   const [time, setTime] = useState(searchParams.get("time") ?? "");
   const [age, setAge] = useState("");
-  const [showInstitutions, setShowInstitutions] = useState(true);
-  const [showDaycares, setShowDaycares] = useState(true);
+  const [showInstitutions, setShowInstitutions] = useState(
+    selectedCategory !== "daycare",
+  );
+  const [showDaycares, setShowDaycares] = useState(
+    selectedCategory !== "institution",
+  );
+
+  useEffect(() => {
+    setShowInstitutions(selectedCategory !== "daycare");
+    setShowDaycares(selectedCategory !== "institution");
+  }, [selectedCategory]);
 
   // 1. Odbieranie kliknięcia z mapy
   useEffect(() => {
