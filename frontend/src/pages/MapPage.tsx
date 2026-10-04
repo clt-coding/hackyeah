@@ -129,11 +129,11 @@ export default function MapPage() {
 
       {/* Środkowy panel - Interaktywna mapa */}
       <section className="map-place">
-        <iframe 
+        <iframe
           ref={iframeRef}
-          className="map-frame" 
-          src="/map/map.html" 
-          title="MomWork Interactive Map" 
+          className="map-frame"
+          src="/map/map.html"
+          title="MomWork Interactive Map"
         />
       </section>
 

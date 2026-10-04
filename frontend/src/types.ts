@@ -21,13 +21,17 @@ export type Nanny = {
 // dorobimy guziki/funkcjonalnosc jak sie zlaczmy z baza danych <3
 
 export interface Place {
-  id: number;
+  id: string;
   name: string;
   type: "daycare" | "activity";
-  distance: string;
-  rating: number;
-  reviews: number;
-  hours: string;
+  hours?: string;
+  openingHours?: string; // "HH:MM", 24-hour
+  closingHours?: string; // "HH:MM", 24-hour
+  distance?: string;
+  rating?: number;
+  reviews?: number;
   description?: string;
   website?: string;
+  lat?: number;
+  lng?: number;
 }
