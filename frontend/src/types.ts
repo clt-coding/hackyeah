@@ -1,3 +1,15 @@
+export type Nanny = {
+  id: number;
+  name: string;
+  age: number;
+  photoUrl: string;
+  isOnline: boolean;
+  hourlyRate: string;
+  experience: string;
+  rating: number;
+  reviewsCount: number;
+  availability: boolean[]; // [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
+};
 // to sie zmieni jak dostaniemy api, narazie jakies basic wrzucilam
 // dorobimy guziki/funkcjonalnosc jak sie zlaczmy z baza danych <3
 

@@ -1,0 +1,138 @@
+.nanny-card {
+  background: #fdfcfb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+
+  .nanny-photo-container {
+    position: relative;
+    height: 280px;
+    width: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.5) 100%);
+    }
+
+    .nanny-header-text {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      color: #fdfcfb;
+      font-weight: 600;
+      font-size: 1.15rem;
+      z-index: 2;
+    }
+
+    .online-badge {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      color: #fdfcfb;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 2;
+      
+      &.tone-green {
+        background: #78a374;
+        color: #2b2420;
+      }
+    }
+  }
+
+  .nanny-info {
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .nanny-primary-details {
+      margin-bottom: 12px;
+
+      .hourly-rate {
+        font-weight: 700;
+        color: #2b2420;
+        font-size: 1.1rem;
+        margin: 0 0 4px 0;
+      }
+
+      .experience {
+        color: #4D0E13;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+    }
+
+    .nanny-ratings {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      
+      .stars {
+        display: flex;
+        gap: 2px;
+        color: #C8A49F;
+      }
+      
+      .reviews-text {
+        font-size: 0.85rem;
+        color: #9b6e5f;
+      }
+    }
+
+    .nanny-availability {
+      margin-top: auto;
+      
+      .availability-label {
+        font-size: 0.9rem;
+        color: #2b2420;
+        margin: 0 0 8px 0;
+      }
+
+      .availability-grid {
+        display: flex;
+        gap: 4px;
+        
+        .day-box {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 6px 0;
+          border-radius: 4px;
+          
+          .day-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+          }
+
+          &.available {
+            background: #4D0E13;
+            color: #fdfcfb;
+          }
+
+          &.unavailable {
+            background: rgba(182, 169, 153, 0.2);
+            color: #b6a999;
+          }
+        }
+      }
+    }
+  }
+}
