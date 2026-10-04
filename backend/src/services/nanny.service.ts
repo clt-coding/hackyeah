@@ -1,7 +1,5 @@
-import { db }from './../libs/db.js';
-
 import { all } from '@prisma/orm-postgres/orm-client';
-
+import { db } from '../libs/db.js';
 import type {
   CreateNannyInput,
   UpdateNannyInput,
@@ -16,6 +14,10 @@ export class NannyError extends Error {
   }
 }
 
+/**
+ * Relacja `user` zawiera password_hash, więcnie zwracamy jej w całości.
+ * Wystawiamy tylko dane potrzebne do wyświetlenia opiekunki.
+ */
 function toPublicNanny<
   T extends { user?: { id: string; name: string; surname: string } | null },
 >(nanny: T) {
@@ -24,6 +26,15 @@ function toPublicNanny<
     ...rest,
     user: user ? { id: user.id, name: user.name, surname: user.surname } : null,
   };
+}
+
+/** Zamienia email z tokenu na id użytkownika. */
+export async function findUserIdByEmail(email: string): Promise<string> {
+  const user = await db.orm.public.User.first({ email });
+  if (!user) {
+    throw new NannyError('Unauthorized', 401);
+  }
+  return user.id;
 }
 
 export async function createNanny(input: CreateNannyInput) {
@@ -37,7 +48,7 @@ export async function createNanny(input: CreateNannyInput) {
     throw new NannyError('Nanny profile already exists for this user', 409);
   }
 
-  //pola z wartością domyślną w kontrakcie (hourly_wage, availability) można pominąć
+  // Pola z wartością domyślną w kontrakcie (hourly_wage, availability) można pominąć
   return db.orm.public.Nanny.create({
     userId: input.userId,
     phone_number: input.phone_number,
@@ -51,7 +62,7 @@ export async function getNannies(filters: ListNanniesFilters) {
     .where((n) => (filters.availableOnly ? n.availability.eq(true) : all()))
     .orderBy([
       (n) => n.rating.desc({ nulls: 'last' }),
-      (n) => n.id.asc(), //stabilna kolejność przy stronicowaniu
+      (n) => n.id.asc(), // stabilna kolejność przy stronicowaniu
     ])
     .limit(filters.limit)
     .offset(filters.offset)

@@ -3,10 +3,27 @@ import * as nannyService from '../services/nanny.service.js';
 import { NannyError } from '../services/nanny.service.js';
 
 interface NannyBody {
-  userId?: string;
   phone_number?: string;
   hourly_wage?: number;
   availability?: boolean;
+}
+
+/**
+ * authenticateToken zapisuje zdekodowany payload JWT w req.user.
+ * Obecnie generateJWT wpisuje do pola `email` to, co dostanie od kontrolera auth:
+ *  - zwykły email (string)                   -> szukamy użytkownika po emailu,
+ *  - cały obiekt użytkownika (aktualnie tak) -> bierzemy z niego `id`.
+ */
+async function currentUserId(req: Request): Promise<string> {
+  const claim = (req as any).user?.email;
+
+  if (typeof claim === 'string' && claim) {
+    return nannyService.findUserIdByEmail(claim);
+  }
+  if (claim && typeof claim === 'object' && typeof claim.id === 'string' && claim.id) {
+    return claim.id;
+  }
+  throw new NannyError('Unauthorized', 401);
 }
 
 function handleError(res: Response, error: unknown) {
@@ -17,6 +34,7 @@ function handleError(res: Response, error: unknown) {
   return res.status(500).json({ error: 'Internal Server Error' });
 }
 
+/** Zwraca komunikat błędu albo null, jeśli pola opcjonalne są poprawne. */
 function validateOptionalFields(body: NannyBody): string | null {
   const { phone_number, hourly_wage, availability } = body;
 
@@ -38,8 +56,8 @@ function validateOptionalFields(body: NannyBody): string | null {
 export async function createNanny(req: Request, res: Response) {
   const body = req.body as NannyBody;
 
-  if (!body.userId || !body.phone_number) {
-    return res.status(400).json({ error: 'userId and phone_number are required' });
+  if (!body.phone_number) {
+    return res.status(400).json({ error: 'phone_number is required' });
   }
   const invalid = validateOptionalFields(body);
   if (invalid) {
@@ -47,8 +65,10 @@ export async function createNanny(req: Request, res: Response) {
   }
 
   try {
+    // userId zawsze z tokenu - nie przyjmujemy go z body
+    const userId = await currentUserId(req);
     const nanny = await nannyService.createNanny({
-      userId: body.userId,
+      userId,
       phone_number: body.phone_number.trim(),
       hourly_wage: body.hourly_wage,
       availability: body.availability,
