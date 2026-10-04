@@ -1,0 +1,139 @@
+.dashboard-loading,
+.dashboard-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: #4d0e13;
+  font-size: 1.5rem;
+  font-weight: 500;
+
+  .btn-primary {
+    margin-top: 24px;
+    padding: 10px 24px;
+    background: #4d0e13;
+    color: #fdfcfb;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+
+    &:hover {
+      background: #2b2420;
+    }
+  }
+}
+
+.logged-in-page {
+  min-height: 100vh;
+  padding: 40px 50px;
+  color: #2b2420;
+
+  @media (max-width: 768px) {
+    padding: 24px 20px;
+  }
+
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+
+    .greeting {
+      font-family: "Ovo", serif;
+      color: #4d0e13;
+      font-size: 2.5rem;
+      margin: 0;
+    }
+
+    .btn-logout {
+      background: #9b6e5f;
+      color: #fdfcfb;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: #4d0e13;
+      }
+    }
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .dashboard-card {
+    background: #fdfcfb;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+    &.highlight-card {
+      border-top: 4px solid #c8a49f;
+    }
+
+    .card-title {
+      color: #4d0e13;
+      font-size: 1.5rem;
+      margin-top: 0;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e6ddcf;
+    }
+
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .label {
+          font-size: 0.85rem;
+          color: #9b6e5f;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+        }
+
+        .value {
+          font-size: 1.1rem;
+          color: #2b2420;
+          font-weight: 500;
+
+          .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+
+            &.available {
+              background: #c8a49f;
+              color: #4d0e13;
+            }
+
+            &.unavailable {
+              background: #e6ddcf;
+              color: #666;
+            }
+          }
+        }
+      }
+    }
+  }
+}

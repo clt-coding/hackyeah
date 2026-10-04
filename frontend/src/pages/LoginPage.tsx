@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import { useAuth } from "../contexts/AuthContext";
 import "../styles/LoginPage.scss";
 import logo from "../assets/logo.png";
 
@@ -22,6 +23,7 @@ type LoginFormData = yup.InferType<typeof loginSchema>;
 export default function LoginPage() {
   const navigate = useNavigate();
   const [serverError, setServerError] = useState<string | null>(null);
+  const { setUser } = useAuth();
 
   const {
     register,
@@ -36,7 +38,7 @@ export default function LoginPage() {
 
     let res: Response;
     try {
-      res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+      res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -47,10 +49,15 @@ export default function LoginPage() {
       return;
     }
 
+    const body = await res.json().catch(() => null);
+
     if (!res.ok) {
-      const body = await res.json().catch(() => null);
       setServerError(body?.error ?? "Login failed");
       return;
+    }
+
+    if (body?.user) {
+      setUser(body.user); 
     }
 
     console.log("login ok");
