@@ -1,29 +1,39 @@
 import type { Nanny } from '../types';
 import '../styles/NannyCard.scss';
 
-export default function NannyCard({ nanny }: { nanny: Nanny }) {
+export default function NannyCard({ nanny, index = 0 }: { nanny: Nanny, index?: number }) {
   const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   
-  // Fallback for availability since backend sends a boolean instead of an array
+  const localPhotos = [
+    "/nannies/photo1.jpg",
+    "/nannies/photo2.jpg",
+    "/nannies/photo3.jpg",
+    "/nannies/photo4.jpg",
+    "/nannies/photo5.jpg",
+    "/nannies/photo6.jpg",
+    "/nannies/photo7.jpg",
+    "/nannies/photo8.jpg",
+    "/nannies/photo9.jpg",
+    "/nannies/photo10.jpg"
+  ];
+  const photoSrc = localPhotos[index % localPhotos.length];
+  
   const availabilityGrid = Array.isArray(nanny.availability) 
     ? nanny.availability 
-    : [true, true, true, true, true, false, false]; // Default placeholder
+    : [true, true, true, true, true, false, false]; 
 
   return (
     <article className="nanny-card">
       <div className="nanny-photo-container">
-        {/* photoUrl is missing, so the default avatar will show */}
-        <img src={nanny.photoUrl || "/default-avatar.jpg"} alt={nanny.user?.name || 'Nanny'} />
+        <img src={photoSrc} alt={nanny.user?.name || 'Nanny'} />
         <div className="photo-overlay"></div>
         
         <div className="nanny-header-text">
-          {/* Mapped to backend's nested user object */}
           <span className="nanny-name">
             {nanny.user?.name} {nanny.user?.surname} {nanny.age ? `(${nanny.age})` : ''}
           </span>
         </div>
         
-        {/* Fallback to false if isOnline is missing */}
         {nanny.isOnline && (
           <div className="online-badge tone-green">
             Now online
@@ -33,13 +43,10 @@ export default function NannyCard({ nanny }: { nanny: Nanny }) {
       
       <div className="nanny-info">
         <div className="nanny-primary-details">
-          {/* Mapped to backend's hourly_wage */}
           <p className="hourly-rate">{nanny.hourly_wage} zł / hr</p>
-          {/* Added a fallback for missing experience */}
           <p className="experience">{nanny.experience || 'Experience not specified'}</p>
         </div>
 
-        {/* Mapped to backend's rating_count */}
         {(nanny.rating_count ?? 0) > 0 && (
           <div className="nanny-ratings">
             <div className="stars">
@@ -57,8 +64,8 @@ export default function NannyCard({ nanny }: { nanny: Nanny }) {
         <div className="nanny-availability">
           <p className="availability-label">Availability:</p>
           <div className="availability-grid">
-            {daysOfWeek.map((day, index) => {
-              const isAvailable = availabilityGrid[index];
+            {daysOfWeek.map((day, dayIndex) => {
+              const isAvailable = availabilityGrid[dayIndex];
               return (
                 <div 
                   key={day} 
