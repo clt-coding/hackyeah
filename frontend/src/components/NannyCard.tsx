@@ -1,31 +1,37 @@
+import { memo, useState, useCallback } from 'react';
 import type { Nanny } from '../types';
 import '../styles/NannyCard.scss';
 
-export default function NannyCard({ nanny, index = 0 }: { nanny: Nanny, index?: number }) {
-  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  
-  const localPhotos = [
-    "/nannies/photo1.jpg",
-    "/nannies/photo2.jpg",
-    "/nannies/photo3.jpg",
-    "/nannies/photo4.jpg",
-    "/nannies/photo5.jpg",
-    "/nannies/photo6.jpg",
-    "/nannies/photo7.jpg",
-    "/nannies/photo8.jpg",
-    "/nannies/photo9.jpg",
-    "/nannies/photo10.jpg"
-  ];
-  const photoSrc = localPhotos[index % localPhotos.length];
-  
-  const availabilityGrid = Array.isArray(nanny.availability) 
-    ? nanny.availability 
-    : [true, true, true, true, true, false, false]; 
+const photoSrc = "/nannies/photo.jpg";
+
+const NannyCard = memo(({ nanny }: { nanny: Nanny }) => {
+  const [showPhoneModal, setShowPhoneModal] = useState(false);
+
+  const handlePhoneClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowPhoneModal(true);
+  }, []);
+
+  const closeModal = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowPhoneModal(false);
+  }, []);
 
   return (
     <article className="nanny-card">
       <div className="nanny-photo-container">
-        <img src={photoSrc} alt={nanny.user?.name || 'Nanny'} />
+        
+        {photoSrc ? (
+          <img 
+            src={photoSrc} 
+            alt={nanny.user?.name || 'Nanny'} 
+            loading="lazy"
+            decoding="async" 
+          />
+        ) : (
+          <div className="no-photo-placeholder" style={{ width: '100%', height: '100%', backgroundColor: '#b6a999' }}></div>
+        )}
+        
         <div className="photo-overlay"></div>
         
         <div className="nanny-header-text">
@@ -34,7 +40,7 @@ export default function NannyCard({ nanny, index = 0 }: { nanny: Nanny, index?: 
           </span>
         </div>
         
-        {nanny.isOnline && (
+        {nanny.availability && (
           <div className="online-badge tone-green">
             Now online
           </div>
@@ -42,9 +48,16 @@ export default function NannyCard({ nanny, index = 0 }: { nanny: Nanny, index?: 
       </div>
       
       <div className="nanny-info">
-        <div className="nanny-primary-details">
+        <div className="nanny-primary-details flex-row">
           <p className="hourly-rate">{nanny.hourly_wage} zł / hr</p>
-          <p className="experience">{nanny.experience || 'Experience not specified'}</p>
+          
+          <button 
+            className="phone-btn" 
+            onClick={handlePhoneClick}
+            aria-label="Show phone number"
+          >
+            <i className="fa-sharp fa-solid fa-phone"></i>
+          </button>
         </div>
 
         {(nanny.rating_count ?? 0) > 0 && (
@@ -60,25 +73,21 @@ export default function NannyCard({ nanny, index = 0 }: { nanny: Nanny, index?: 
             <span className="reviews-text">{nanny.rating_count} opinions</span>
           </div>
         )}
+      </div>
 
-        <div className="nanny-availability">
-          <p className="availability-label">Availability:</p>
-          <div className="availability-grid">
-            {daysOfWeek.map((day, dayIndex) => {
-              const isAvailable = availabilityGrid[dayIndex];
-              return (
-                <div 
-                  key={day} 
-                  className={`day-box ${isAvailable ? 'available' : 'unavailable'}`}
-                >
-                  <span className="day-name">{day}</span>
-                  <i className={isAvailable ? "fa-utility-fill fa-semibold fa-check" : "fa-solid fa-xmark"}></i>
-                </div>
-              );
-            })}
+      {showPhoneModal && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Contact {nanny.user?.name}</h3>
+            <p className="phone-number">
+              <i className="fa-sharp fa-solid fa-phone"></i> {nanny.phone_number || "No phone number provided"}
+            </p>
+            <button className="close-btn" onClick={closeModal}>Close</button>
           </div>
         </div>
-      </div>
+      )}
     </article>
   );
-}
+});
+
+export default NannyCard;
