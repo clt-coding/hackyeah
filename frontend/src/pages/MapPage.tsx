@@ -205,7 +205,14 @@ export default function MapPage() {
       <aside className="details">
         <div className="filters-title">DETAILS</div>
         <div className="details-photo">
-          {selectedFacility ? "Image Preview" : "No place selected"}
+          {selectedFacility ? (
+            <img
+              src="/nannies/gautam-arora-78Ae6N7rNvI-unsplash.jpg"
+              alt={facilityName}
+            />
+          ) : (
+            "No place selected"
+          )}
         </div>
 
         {selectedFacility ? (
