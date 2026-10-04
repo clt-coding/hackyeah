@@ -34,3 +34,11 @@ export async function getNearbyInstitutions(
     distance_in_meters: Number(r.distance_in_meters),
   }));
 }
+
+import { db } from "./../libs/db.js";
+
+export async function getAllInstitutions() {
+  return db.orm.public.Institution
+    .orderBy([(i) => i.name.asc(), (i) => i.id.asc()])
+    .all();
+}
