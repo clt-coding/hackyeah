@@ -1,14 +1,21 @@
 export type Nanny = {
-  id: number;
-  name: string;
-  age: number;
-  photoUrl: string;
-  isOnline: boolean;
-  hourlyRate: string;
-  experience: string;
+  id: string;
+  hourly_wage: number;
+  phone_number: string;
   rating: number;
-  reviewsCount: number;
-  availability: boolean[]; // [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
+  rating_count: number;
+  availability: boolean | boolean[]; // Backend gives boolean, we prefer array
+  user: {
+    id: string;
+    name: string;
+    surname: string;
+  };
+  userId: string;
+  // Optional fields that backend isn't sending yet but frontend wants:
+  age?: number;
+  photoUrl?: string;
+  isOnline?: boolean;
+  experience?: string;
 };
 // to sie zmieni jak dostaniemy api, narazie jakies basic wrzucilam
 // dorobimy guziki/funkcjonalnosc jak sie zlaczmy z baza danych <3
