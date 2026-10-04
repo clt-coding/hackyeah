@@ -3,10 +3,14 @@ import * as authService from '../services/auth.service.js';
 import { Type } from '../types/user.js';
 
 // Konfiguracja bezpiecznego ciasteczka
+// W produkcji frontend i backend sa na innych domenach (Vercel/Render), wiec
+// ciasteczko musi byc SameSite=None (wymaga Secure=true). Lokalnie oba dzialaja
+// na localhost, gdzie SameSite=Lax + brak Secure dziala przez zwykle http.
+const isProduction = process.env.NODE_ENV === 'production';
 const COOKIE_OPTIONS = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax' as const,
+    secure: isProduction,
+    sameSite: (isProduction ? 'none' : 'lax') as 'none' | 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dni w ms
 };
 
@@ -67,10 +71,6 @@ export async function register(req: Request, res: Response) {
 }
 
 export function logout(_req: Request, res: Response) {
-    res.clearCookie('token', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-    });
+    res.clearCookie('token', COOKIE_OPTIONS);
     return res.status(200).json({ message: 'Logout successful' });
 }
