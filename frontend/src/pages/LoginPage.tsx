@@ -7,7 +7,6 @@ import * as yup from "yup";
 import "../styles/LoginPage.scss";
 import logo from "../assets/logo.png";
 
-// Schemat walidacji logowania
 const loginSchema = yup
   .object({
     email: yup
@@ -37,7 +36,7 @@ export default function LoginPage() {
 
     let res: Response;
     try {
-      res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+      res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

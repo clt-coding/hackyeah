@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -35,6 +36,7 @@ type RegisterFormData = yup.InferType<typeof registerSchema>;
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
@@ -45,8 +47,38 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    
-    // Tutaj możesz dodać np. wysyłkę do bazy (axios/fetch)
+    setServerError(null);
+
+    const backendPayload = {
+      email: data.email,
+      email_confirm: data.email, 
+      password: data.password,
+      password_confirm: data.confirmPassword, 
+      name: "New", 
+      surname: "User", 
+      type: 1,
+    };
+
+    let res: Response;
+    try {
+      res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(backendPayload),
+      });
+    } catch {
+      setServerError("Could not reach the server. Is it running?");
+      return;
+    }
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => null);
+      setServerError(body?.error ?? "Registration failed");
+      return;
+    }
+
+    console.log("Registration ok");
     navigate("/");
   };
 
@@ -141,6 +173,8 @@ export default function RegisterPage() {
               )}
             </div>
           </div>
+
+          {serverError && <p className="error-text">{serverError}</p>}
 
           <button
             type="submit"
