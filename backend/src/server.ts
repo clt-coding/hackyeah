@@ -10,6 +10,8 @@ import authRouter from './routes/auth.route.js';
 import userRouter from './routes/user.route.js';
 import nannyRouter from './routes/nanny.route.js';
 import daycareRouter from './routes/daycare.route.js';
+import addressRouter from './routes/address.route.js';
+
 
 dotenv.config();
 
@@ -52,6 +54,8 @@ app.use('/api/nannies', nannyRouter);
 app.use('/api/user', userRouter);
 
 app.use('/api/daycares', daycareRouter);
+
+app.use('/api/addresses', addressRouter);
 
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: 'Endpoint does not exist' });
