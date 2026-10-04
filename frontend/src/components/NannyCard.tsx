@@ -40,13 +40,13 @@ export default function NannyCard({ nanny }: { nanny: Nanny }) {
         </div>
 
         {/* Mapped to backend's rating_count */}
-        {(nanny.rating_count > 0) && (
+        {(nanny.rating_count ?? 0) > 0 && (
           <div className="nanny-ratings">
             <div className="stars">
               {[...Array(5)].map((_, i) => (
-                <i 
-                  key={i} 
-                  className={i < Math.floor(nanny.rating) ? "fa-solid fa-star" : "fa-regular fa-star"}
+                <i
+                  key={i}
+                  className={i < Math.floor(nanny.rating ?? 0) ? "fa-solid fa-star" : "fa-regular fa-star"}
                 ></i>
               ))}
             </div>
