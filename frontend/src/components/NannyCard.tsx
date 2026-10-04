@@ -1,31 +1,46 @@
+import { memo, useState, useCallback } from 'react';
 import type { Nanny } from '../types';
 import '../styles/NannyCard.scss';
 
-export default function NannyCard({ nanny }: { nanny: Nanny }) {
-  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  
-  // Fallback for availability since backend sends a boolean instead of an array
-  const availabilityGrid = Array.isArray(nanny.availability) 
-    ? nanny.availability 
-    : [true, true, true, true, true, false, false]; // Default placeholder
+const photoSrc = "/nannies/photo.jpg";
+
+const NannyCard = memo(({ nanny }: { nanny: Nanny }) => {
+  const [showPhoneModal, setShowPhoneModal] = useState(false);
+
+  const handlePhoneClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowPhoneModal(true);
+  }, []);
+
+  const closeModal = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowPhoneModal(false);
+  }, []);
 
   return (
     <article className="nanny-card">
       <div className="nanny-photo-container">
-        {/* photoUrl is missing, so the default avatar will show */}
-        <img src={nanny.photoUrl || "/default-avatar.jpg"} alt={nanny.user?.name || 'Nanny'} />
-        <img src="/nannies/abbat1-girl-6093779_1920.jpg"/>
+        
+        {photoSrc ? (
+          <img 
+            src={photoSrc} 
+            alt={nanny.user?.name || 'Nanny'} 
+            loading="lazy"
+            decoding="async" 
+          />
+        ) : (
+          <div className="no-photo-placeholder" style={{ width: '100%', height: '100%', backgroundColor: '#b6a999' }}></div>
+        )}
+        
         <div className="photo-overlay"></div>
         
         <div className="nanny-header-text">
-          {/* Mapped to backend's nested user object */}
           <span className="nanny-name">
             {nanny.user?.name} {nanny.user?.surname} {nanny.age ? `(${nanny.age})` : ''}
           </span>
         </div>
         
-        {/* Fallback to false if isOnline is missing */}
-        {nanny.isOnline && (
+        {nanny.availability && (
           <div className="online-badge tone-green">
             Now online
           </div>
@@ -33,14 +48,18 @@ export default function NannyCard({ nanny }: { nanny: Nanny }) {
       </div>
       
       <div className="nanny-info">
-        <div className="nanny-primary-details">
-          {/* Mapped to backend's hourly_wage */}
+        <div className="nanny-primary-details flex-row">
           <p className="hourly-rate">{nanny.hourly_wage} zł / hr</p>
-          {/* Added a fallback for missing experience */}
-          <p className="experience">{nanny.experience || 'Experience not specified'}</p>
+          
+          <button 
+            className="phone-btn" 
+            onClick={handlePhoneClick}
+            aria-label="Show phone number"
+          >
+            <i className="fa-sharp fa-solid fa-phone"></i>
+          </button>
         </div>
 
-        {/* Mapped to backend's rating_count */}
         {(nanny.rating_count ?? 0) > 0 && (
           <div className="nanny-ratings">
             <div className="stars">
@@ -54,25 +73,21 @@ export default function NannyCard({ nanny }: { nanny: Nanny }) {
             <span className="reviews-text">{nanny.rating_count} opinions</span>
           </div>
         )}
+      </div>
 
-        <div className="nanny-availability">
-          <p className="availability-label">Availability:</p>
-          <div className="availability-grid">
-            {daysOfWeek.map((day, index) => {
-              const isAvailable = availabilityGrid[index];
-              return (
-                <div 
-                  key={day} 
-                  className={`day-box ${isAvailable ? 'available' : 'unavailable'}`}
-                >
-                  <span className="day-name">{day}</span>
-                  <i className={isAvailable ? "fa-utility-fill fa-semibold fa-check" : "fa-solid fa-xmark"}></i>
-                </div>
-              );
-            })}
+      {showPhoneModal && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Contact {nanny.user?.name}</h3>
+            <p className="phone-number">
+              <i className="fa-sharp fa-solid fa-phone"></i> {nanny.phone_number || "No phone number provided"}
+            </p>
+            <button className="close-btn" onClick={closeModal}>Close</button>
           </div>
         </div>
-      </div>
+      )}
     </article>
   );
-}
+});
+
+export default NannyCard;

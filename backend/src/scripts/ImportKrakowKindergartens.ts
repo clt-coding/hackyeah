@@ -3,7 +3,7 @@
  *   npx tsx src/scripts/importKrakowKindergartens.ts --dry-run   # tylko podgląd
  *   npx tsx src/scripts/importKrakowKindergartens.ts             # zapis do bazy
  */
-import { Temporal } from 'temporal-polyfill'; // musi być PRZED importem db (kodek pg/time-temporal)
+import { Temporal } from 'temporal-polyfill';
 import { db } from '../libs/db.js';
 import { InstitutionType } from '../types/institutions.js';
 

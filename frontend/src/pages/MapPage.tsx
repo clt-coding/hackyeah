@@ -20,9 +20,10 @@ export default function MapPage() {
   const [selectedFacility, setSelectedFacility] = useState<Facility | null>(
     null,
   );
-  const [institutionsError, setInstitutionsError] = useState<string | null>(
-    null,
-  );
+  const [mapNotice, setMapNotice] = useState<{
+    kind: "institutions" | "geocode";
+    message: string;
+  } | null>(null);
 
   // Stany filtrów
   const [distanceFrom, setDistanceFrom] = useState(
@@ -40,6 +41,7 @@ export default function MapPage() {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowInstitutions(selectedCategory !== "daycare");
     setShowDaycares(selectedCategory !== "institution");
   }, [selectedCategory]);
@@ -51,7 +53,10 @@ export default function MapPage() {
         setSelectedFacility(event.data.facility);
       }
       if (event.data?.type === "INSTITUTIONS_ERROR") {
-        setInstitutionsError(event.data.message);
+        setMapNotice({ kind: "institutions", message: event.data.message });
+      }
+      if (event.data?.type === "GEOCODE_ERROR") {
+        setMapNotice({ kind: "geocode", message: event.data.message });
       }
     };
 
@@ -68,7 +73,6 @@ export default function MapPage() {
           filters: {
             showInstitutions,
             showDaycares,
-            searchQuery: distanceFrom,
             time,
             age: age ? Number(age) : undefined,
           },
@@ -76,7 +80,7 @@ export default function MapPage() {
         "*",
       );
     }
-  }, [showInstitutions, showDaycares, distanceFrom, time, age]);
+  }, [showInstitutions, showDaycares, time, age]);
 
   // 3. Wysyłane tylko po kliknięciu "Apply Filters" - geocoding jest kosztowny
   function applyWorkplaceFilter() {
@@ -196,7 +200,7 @@ export default function MapPage() {
         <iframe
           ref={iframeRef}
           className="map-frame"
-          src="/map/map.html"
+          src="/map.html"
           title="MomWork Interactive Map"
         />
       </section>
@@ -260,29 +264,29 @@ export default function MapPage() {
         )}
       </aside>
 
-      {institutionsError && (
-        <div
-          className="modal-overlay"
-          onClick={() => setInstitutionsError(null)}
-        >
+      {mapNotice && (
+        <div className="modal-overlay" onClick={() => setMapNotice(null)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-            <h3>Can't search near your workplace yet</h3>
-            <p>
-              You need to be logged in with a home address saved to your account
-              before we can search for institutions near you.
-            </p>
+            <h3>
+              {mapNotice.kind === "institutions"
+                ? "Couldn't load institutions"
+                : "Couldn't find that address"}
+            </h3>
+            <p>{mapNotice.message}</p>
             <div className="modal-actions">
-              <button
-                type="button"
-                className="apply-btn"
-                onClick={() => navigate("/login")}
-              >
-                Log in
-              </button>
+              {mapNotice.kind === "institutions" && (
+                <button
+                  type="button"
+                  className="apply-btn"
+                  onClick={() => navigate("/login")}
+                >
+                  Log in
+                </button>
+              )}
               <button
                 type="button"
                 className="modal-dismiss"
-                onClick={() => setInstitutionsError(null)}
+                onClick={() => setMapNotice(null)}
               >
                 Dismiss
               </button>

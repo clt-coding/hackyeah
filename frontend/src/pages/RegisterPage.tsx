@@ -20,6 +20,8 @@ const weekdays = [
 ] as const;
 
 const registerSchema = yup.object({
+  name: yup.string().trim().required("Name is required"),
+  surname: yup.string().trim().required("Surname is required"),
   role: yup
     .mixed<(typeof accountTypes)[number]>()
     .oneOf(accountTypes, "Please choose an account type")
@@ -122,19 +124,39 @@ export default function RegisterPage() {
       email_confirm: data.email,
       password: data.password,
       password_confirm: data.confirmPassword,
-      name: "New",
-      surname: "User",
+      name: data.name,
+      surname: data.surname,
       type: 1,
+    };
+
+    const backendPayloadNanny = {
+      email: data.email,
+      email_confirm: data.email,
+      password: data.password,
+      password_confirm: data.confirmPassword,
+      name: data.name,
+      surname: data.surname,
+      type: 0,
     };
 
     let res: Response;
     try {
-      res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(backendPayload),
-      });
+      if (selectedRole == "nanny") {
+        res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(backendPayloadNanny),
+        });
+      } else {
+        res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(backendPayload),
+        });
+      }
+      
     } catch {
       setServerError("Could not reach the server. Is it running?");
       return;
@@ -166,6 +188,30 @@ export default function RegisterPage() {
         <img src={logo} alt="MOMent-logo" className="logo" />
 
         <form onSubmit={handleSubmit(onSubmit)} className="register-form">
+          <div className="input-field">
+            <input
+              type="text"
+              placeholder="Name"
+              className="input"
+              {...register("name")}
+            />
+            {errors.name && (
+              <p className="error-text">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div className="input-field">
+            <input
+              type="text"
+              placeholder="Surname"
+              className="input"
+              {...register("surname")}
+            />
+            {errors.surname && (
+              <p className="error-text">{errors.surname.message}</p>
+            )}
+          </div>
+
           <div className="input-field">
             <input
               type="email"

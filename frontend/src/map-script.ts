@@ -1,9 +1,10 @@
 import { getDaycares, type Daycare as RawDaycare } from "./api/daycares";
 import {
-  getNearbyInstitutions,
+  getAllInstitutions,
   ageToInstitutionType,
   type Institution as RawInstitution,
 } from "./api/institutions";
+import { geocode } from "./api/geocode";
 
 declare const L: any;
 
@@ -45,7 +46,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors",
 }).addTo(map);
 
-const markersGroup = L.layerGroup().addTo(map);
+const markersGroup = L.markerClusterGroup().addTo(map);
 
 // zostawiamy instytucje zmockowane az nie dzialaja, daycares sa prawdziwe
 const mockInstitutions: Facility[] = [
@@ -83,9 +84,8 @@ const mockInstitutions: Facility[] = [
 
 let allData: Facility[] = [...mockInstitutions];
 let realDaycares: Facility[] = [];
-// null = not loaded yet (or last load failed) -> fall back to mockInstitutions
+// null = not loaded yet (or load failed) -> fall back to mockInstitutions
 let realInstitutions: Facility[] | null = null;
-let lastInstitutionQuery = "";
 
 function rebuildData() {
   allData = [...(realInstitutions ?? mockInstitutions), ...realDaycares];
@@ -113,54 +113,22 @@ const INSTITUTION_TYPE_LABEL: Record<0 | 1, string> = {
   1: "Nursery",
 };
 
-function institutionToFacility(institution: RawInstitution): Facility {
+function institutionToFacility(institution: RawInstitution): Facility | null {
+  if (institution.lat == null || institution.lng == null) return null;
   return {
     id: institution.id,
     category: "INSTITUTION",
     institution_name: institution.name,
     type: INSTITUTION_TYPE_LABEL[institution.type],
-    // backend only gives one preformatted address string, not separate fields
-    city: "",
-    street: institution.address,
-    house_number: "",
+    city: institution.city,
+    street: institution.street,
+    house_number: institution.building_number,
+    unit_number: institution.unit_number ?? undefined,
     opening_hour: institution.opening_hours,
     closing_hour: institution.closing_hours,
     lat: institution.lat,
     lng: institution.lng,
   };
-}
-
-// Only refetch when the actual address/radius values change, not on every
-// unrelated filter change (e.g. toggling Time shouldn't hit the network).
-function maybeFetchInstitutions(
-  street: string,
-  houseNumber: string,
-  radiusKm: number,
-) {
-  if (!street || !houseNumber || !radiusKm) return;
-
-  const queryKey = `${street}|${houseNumber}|${radiusKm}`;
-  if (queryKey === lastInstitutionQuery) return;
-  lastInstitutionQuery = queryKey;
-
-  getNearbyInstitutions(street, houseNumber, radiusKm)
-    .then((institutions) => {
-      realInstitutions = institutions.map(institutionToFacility);
-      rebuildData();
-      renderMarkers();
-    })
-    .catch((err) => {
-      // Expected for now: user not logged in, or no home address saved yet.
-      // Keep whatever institutions we already had (mock, most likely), and
-      // let the parent page show a proper popup about it.
-      console.warn("Could not load nearby institutions:", err.message);
-      if (window.parent) {
-        window.parent.postMessage(
-          { type: "INSTITUTIONS_ERROR", message: err.message },
-          "*",
-        );
-      }
-    });
 }
 
 getDaycares().then((daycares) => {
@@ -170,6 +138,25 @@ getDaycares().then((daycares) => {
   rebuildData();
   renderMarkers();
 });
+
+getAllInstitutions()
+  .then((institutions) => {
+    realInstitutions = institutions
+      .map(institutionToFacility)
+      .filter((f): f is Facility => f !== null);
+    rebuildData();
+    renderMarkers();
+  })
+  .catch((err) => {
+    // Keep showing mockInstitutions if this fails (e.g. not logged in).
+    console.warn("Could not load institutions:", err.message);
+    if (window.parent) {
+      window.parent.postMessage(
+        { type: "INSTITUTIONS_ERROR", message: err.message },
+        "*",
+      );
+    }
+  });
 
 let currentFilters: {
   showInstitutions: boolean;
@@ -183,6 +170,46 @@ let currentFilters: {
   searchQuery: "",
   time: "",
 };
+
+let workCenter: { lat: number; lng: number } | null = null;
+let workRadiusMeters: number | null = null;
+let radiusCircle: any = null;
+let lastGeocodeQuery = "";
+
+function maybeGeocodeWorkplace(
+  street: string,
+  houseNumber: string,
+  radiusKm: number,
+) {
+  if (!street || !houseNumber || !radiusKm) return;
+
+  const queryKey = `${street}|${houseNumber}|${radiusKm}`;
+  if (queryKey === lastGeocodeQuery) return;
+  lastGeocodeQuery = queryKey;
+
+  geocode(street, houseNumber)
+    .then((location) => {
+      workCenter = location;
+      workRadiusMeters = radiusKm * 1000;
+
+      if (radiusCircle) map.removeLayer(radiusCircle);
+      radiusCircle = L.circle([workCenter.lat, workCenter.lng], {
+        radius: workRadiusMeters,
+      }).addTo(map);
+      map.setView([workCenter.lat, workCenter.lng], 13);
+
+      renderMarkers();
+    })
+    .catch((err) => {
+      console.warn("Could not geocode workplace address:", err.message);
+      if (window.parent) {
+        window.parent.postMessage(
+          { type: "GEOCODE_ERROR", message: err.message },
+          "*",
+        );
+      }
+    });
+}
 
 function renderMarkers() {
   markersGroup.clearLayers();
@@ -223,6 +250,14 @@ function renderMarkers() {
       if (item.type !== expectedType) return false;
     }
 
+    // 5. Filtrowanie po promieniu od adresu pracy
+    if (workCenter && workRadiusMeters !== null) {
+      const distance = L.latLng(workCenter.lat, workCenter.lng).distanceTo(
+        L.latLng(item.lat, item.lng),
+      );
+      if (distance > workRadiusMeters) return false;
+    }
+
     return true;
   });
 
@@ -245,13 +280,15 @@ function renderMarkers() {
   });
 }
 
+// TODO: once GET /api/geocode exists, geocode street/houseNumber here and
+// filter allData by L.latLng(center).distanceTo(...) <= radiusKm * 1000.
 window.addEventListener("message", (event) => {
   if (event.data?.type === "APPLY_FILTERS") {
     currentFilters = { ...currentFilters, ...event.data.filters };
 
     const { street, houseNumber, radiusKm } = event.data.filters;
     if (street !== undefined && houseNumber !== undefined && radiusKm !== undefined) {
-      maybeFetchInstitutions(street, houseNumber, radiusKm);
+      maybeGeocodeWorkplace(street, houseNumber, radiusKm);
     }
 
     renderMarkers();

@@ -136,3 +136,87 @@
     }
   }
 }
+
+/* Add to existing .nanny-info styles */
+.nanny-primary-details.flex-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .phone-btn {
+    background: #C8A49F; /* tone-pink */
+    color: #fdfcfb;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+
+    &:hover {
+      background: #9b6e5f;
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+
+  .modal-content {
+    background: #fdfcfb;
+    padding: 32px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    min-width: 300px;
+
+    h3 {
+      margin-top: 0;
+      color: #2b2420;
+      font-family: "Ovo", serif;
+      font-size: 1.5rem;
+    }
+
+    .phone-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #4D0E13;
+      margin: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .close-btn {
+      background: #b6a999;
+      color: #2b2420;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+
+      &:hover {
+        background: #9b6e5f;
+        color: #fdfcfb;
+      }
+    }
+  }
+}
