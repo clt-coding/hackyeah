@@ -1,6 +1,5 @@
 $color-text: #1a1a1a;
 $color-text-muted: #6b6b6b;
-$color-bg: rgb(254 248 242);
 $color-bg-muted: #f3f3f3;
 $color-border: #d5c7b5;
 $color-logo: #4c0e11;
@@ -26,7 +25,6 @@ body,
   min-height: 100vh;
   height: auto !important;
   width: 100%;
-  background-color: $color-bg;
   padding: 40px 20px;
   box-sizing: border-box;
 

@@ -5,11 +5,22 @@ interface CategoryCardProps {
   icon: string;
   title: string;
   subtitle: string;
+  onClick?: () => void;
 }
 
-export default function CategoryCard({ tone, icon, title, subtitle }: CategoryCardProps) {
+export default function CategoryCard({
+  tone,
+  icon,
+  title,
+  subtitle,
+  onClick,
+}: CategoryCardProps) {
   return (
-    <div className={`category-card tone-${tone}`}>
+    <button
+      type="button"
+      className={`category-card tone-${tone}`}
+      onClick={onClick}
+    >
       <div className="category-icon">
         <i className={`fa-solid fa-${icon}`} aria-hidden="true" />
       </div>
@@ -20,6 +31,6 @@ export default function CategoryCard({ tone, icon, title, subtitle }: CategoryCa
           <i className="fa-solid fa-arrow-up-right category-arrow" aria-hidden="true" />
         </div>
       </div>
-    </div>
+    </button>
   );
 }
