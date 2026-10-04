@@ -1,10 +1,7 @@
-import NannyCard from '../components/NannyCard';
-import '../styles/NanniesPage.scss';
-import type { Nanny } from '../types';
-import { useState, useEffect } from "react";
 import NannyCard from "../components/NannyCard";
 import "../styles/NanniesPage.scss";
 import type { Nanny } from "../types";
+import { useState, useEffect } from "react";
 import { getNannies } from "../api/nannies";
 
 export default function NanniesPage() {
